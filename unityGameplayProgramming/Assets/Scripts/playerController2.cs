@@ -9,6 +9,8 @@ public class playerController2 : MonoBehaviour
     Vector2 move;
     public float speed = 10;
 
+    Animator animator;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -16,6 +18,9 @@ public class playerController2 : MonoBehaviour
         controls.Player.Move.performed += ctx => SendMessage(ctx.ReadValue<Vector2>());
         controls.Player.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => move = Vector2.zero;
+
+        animator = GetComponent<Animator>();
+        Debug.Log(animator);
     }
 
     private void OnEnable()
@@ -38,5 +43,14 @@ public class playerController2 : MonoBehaviour
     {
         Vector3 movement = new Vector3(move.x, 0.0f, move.y) * speed * Time.deltaTime;
         transform.Translate(movement, Space.World);
+
+        if (move.x != 0 || move.y != 0)
+        {
+            animator.SetBool("isWalking", true);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+        }
     }
 }
