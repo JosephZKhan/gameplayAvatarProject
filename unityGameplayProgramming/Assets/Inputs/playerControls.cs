@@ -41,6 +41,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""e50e3f46-59cc-44b1-9b05-81ce07ecca33"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -329,6 +337,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""moveDirection"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ee0aed23-bdc6-424d-b4bb-b1ae08100d23"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -363,6 +382,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player_Buttons = m_Player.FindAction("Buttons", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_moveDirection = m_Player.FindAction("moveDirection", throwIfNotFound: true);
+        m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -415,6 +435,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Buttons;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_moveDirection;
+    private readonly InputAction m_Player_Jump;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -422,6 +443,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Buttons => m_Wrapper.m_Player_Buttons;
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @moveDirection => m_Wrapper.m_Player_moveDirection;
+        public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -440,6 +462,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @moveDirection.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveDirection;
                 @moveDirection.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveDirection;
                 @moveDirection.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveDirection;
+                @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -453,6 +478,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @moveDirection.started += instance.OnMoveDirection;
                 @moveDirection.performed += instance.OnMoveDirection;
                 @moveDirection.canceled += instance.OnMoveDirection;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -480,5 +508,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnButtons(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnMoveDirection(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }

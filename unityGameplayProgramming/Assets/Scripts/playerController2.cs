@@ -8,16 +8,24 @@ public class playerController2 : MonoBehaviour
     PlayerControls controls;
     Vector2 move;
     Vector2 moveDirection;
+
     public float speed = 10;
 
     public float turnSmoothTime = 0.2f;
     float turnSmoothVelocity;
 
+    bool isJumping;
+    public float jumpVelocity = 5;
+    public float gravityScale = 1.0f;
+
+    public static float globalGravity = -9.81f;
+
     public float speedSmoothTime = 0.1f;
     float speedSmoothVelocity;
-    float currentSpeed;
 
     Animator animator;
+
+    Rigidbody rb;
 
     // Start is called before the first frame update
     void Awake()
@@ -26,9 +34,14 @@ public class playerController2 : MonoBehaviour
         //controls.Player.Move.performed += ctx => SendMessage(ctx.ReadValue<Vector2>());
         controls.Player.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => move = Vector2.zero;
+
+        controls.Player.Jump.performed += ctx => isJumping = true;
+        controls.Player.Jump.canceled += ctx => isJumping = false;
  
         animator = GetComponent<Animator>();
-        Debug.Log(animator);
+
+        rb = GetComponent<Rigidbody>();
+        rb.useGravity = false;
     }
 
     private void OnEnable()
@@ -63,13 +76,22 @@ public class playerController2 : MonoBehaviour
         float animationSpeedPercent = moveDirection.magnitude;
         animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
 
-        /* if (move.x != 0 || move.y != 0)
+        Vector3 gravity = globalGravity * gravityScale * Vector3.up;
+        rb.AddForce(gravity, ForceMode.Acceleration);
+
+        if (isJumping)
         {
-            animator.SetBool("isWalking", true);
+            Jump();
         }
-        else
-        {
-            animator.SetBool("isWalking", false);
-        } */
+
+    }
+
+    void Jump()
+    {
+        Debug.Log("jumped");
+        rb.velocity = rb.velocity + Vector3.up * jumpVelocity;
+
+
+        isJumping = false;
     }
 }
