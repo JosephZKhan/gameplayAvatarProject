@@ -104,6 +104,8 @@ public class playerController2 : MonoBehaviour
         Debug.Log("jumped");
         rb.velocity = rb.velocity + Vector3.up * jumpVelocity;
 
+        animator.SetBool("isJumping", true);
+
         isJumping = false;
     }
 
@@ -112,6 +114,8 @@ public class playerController2 : MonoBehaviour
         if (other.collider.gameObject.layer == groundLayer)
         {
             isGrounded = true;
+
+            animator.SetBool("isJumping", false);
         }
     }
 
