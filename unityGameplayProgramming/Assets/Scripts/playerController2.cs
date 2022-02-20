@@ -23,9 +23,18 @@ public class playerController2 : MonoBehaviour
     public float speedSmoothTime = 0.1f;
     float speedSmoothVelocity;
 
+    public float distanceToGround = 1.0f;
+    public bool isGrounded;
+
     Animator animator;
 
     Rigidbody rb;
+
+    Collider coll;
+
+    private LayerMask groundLayer;
+
+    
 
     // Start is called before the first frame update
     void Awake()
@@ -42,6 +51,10 @@ public class playerController2 : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
+
+        coll = GetComponent<Collider>();
+
+        groundLayer = LayerMask.NameToLayer("Walkable");
     }
 
     private void OnEnable()
@@ -79,7 +92,8 @@ public class playerController2 : MonoBehaviour
         Vector3 gravity = globalGravity * gravityScale * Vector3.up;
         rb.AddForce(gravity, ForceMode.Acceleration);
 
-        if (isJumping)
+
+        if (isJumping && isGrounded)
         {
             Jump();
         }
@@ -91,7 +105,22 @@ public class playerController2 : MonoBehaviour
         Debug.Log("jumped");
         rb.velocity = rb.velocity + Vector3.up * jumpVelocity;
 
-
         isJumping = false;
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.collider.gameObject.layer == groundLayer)
+        {
+            isGrounded = true;
+        }
+    }
+
+    void OnCollisionExit(Collision other)
+    {
+        if (other.collider.gameObject.layer == groundLayer)
+        {
+            isGrounded = false;
+        }
     }
 }

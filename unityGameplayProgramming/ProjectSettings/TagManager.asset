@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Shadow
   - Collide
+  - Ground
   layers:
   - Default
   - TransparentFX
