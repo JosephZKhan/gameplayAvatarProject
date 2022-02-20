@@ -23,8 +23,7 @@ public class playerController2 : MonoBehaviour
     public float speedSmoothTime = 0.1f;
     float speedSmoothVelocity;
 
-    public float distanceToGround = 1.0f;
-    public bool isGrounded;
+    bool isGrounded;
 
     Animator animator;
 
