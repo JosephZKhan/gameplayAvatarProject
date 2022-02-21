@@ -46,7 +46,6 @@ public class playerController2 : MonoBehaviour
     float hoverStartTime;
 
     bool isPunching;
-    bool punchDamaging;
 
     bool freezeWalking;
 
@@ -79,6 +78,8 @@ public class playerController2 : MonoBehaviour
 
         coll = GetComponent<CapsuleCollider>();
         punchColl = GetComponent<BoxCollider>();
+
+        punchColl.enabled = false;
 
         Debug.Log(coll);
         Debug.Log(punchColl);
@@ -211,7 +212,7 @@ public class playerController2 : MonoBehaviour
 
     public void punchDamageActivate()
     {
-        punchDamaging = true;
+        punchColl.enabled = true;
         Debug.Log("punch is lethal!");
     }
 
@@ -220,6 +221,6 @@ public class playerController2 : MonoBehaviour
         animator.SetBool("isPunching", false);
         //animator.ResetTrigger("punchTrigger");
         freezeWalking = false;
-        punchDamaging = false;
+        punchColl.enabled = false;
     }
 }
