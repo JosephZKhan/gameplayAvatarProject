@@ -50,6 +50,7 @@ public class playerController2 : MonoBehaviour
     bool freezeWalking;
     bool freezeJumping;
 
+
     
 
     // Start is called before the first frame update
@@ -83,6 +84,7 @@ public class playerController2 : MonoBehaviour
         punchColl.enabled = false;
 
         groundLayer = LayerMask.NameToLayer("Walkable");
+
     }
 
     private void OnEnable()
@@ -100,43 +102,47 @@ public class playerController2 : MonoBehaviour
         Debug.Log("Thumb-stick coordinates = " + coordinates);
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
+        //if player can walk
         if (!freezeWalking)
         {
+            //use isRunning bool to set movement speed. scaled with move magnitude
             float speed = ((isRunning && isGrounded) ? runSpeed : walkSpeed) * move.magnitude;
 
+            //update movement
             Vector3 movement = new Vector3(move.x, 0.0f, move.y) * speed * Time.deltaTime;
             transform.Translate(movement, Space.World);
 
+            //normalize movement for rotation
             Vector2 moveDirection = move.normalized;
 
+            //if the user moves player
             if (moveDirection != Vector2.zero)
             {
+                //rotate the player to face forwards
                 float targetRotation = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg;
                 transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, turnSmoothTime);
             }
 
-            //float animationSpeedPercent = moveDirection.magnitude;
-
+            //update blend tree to determing walking/running animation
             float animationSpeedPercent = ((isRunning) ? 1 : 0.5f) * move.magnitude;
             animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
         }
 
-        
+        //set player gravity depending on hover status
+        Vector3 gravity = ((isHovering) ? hoverGravityScale : gravityScale) * globalGravity * Vector3.up;
 
-
-        Vector3 gravity = (isHovering) ? globalGravity * hoverGravityScale * Vector3.up : globalGravity * gravityScale * Vector3.up;
-
+        //accelerate player downwards by gravity
         rb.AddForce(gravity, ForceMode.Acceleration);
 
-
+        //start a jump if player is on ground/jump button pressed/jumping isn't frozen
         if (isJumping && isGrounded && !freezeJumping)
         {
             Jump();
         }
 
+        //start a hover if hover button pressed/player is falling
         if (hoverButtonPressed && !isGrounded && rb.velocity.y < 0)
         {
             if (canStartHover)
@@ -149,11 +155,13 @@ public class playerController2 : MonoBehaviour
             isHovering = false;
         }
 
+        //re-enable hovering when player lands
         if (isGrounded)
         {
             canStartHover = true;
         }
 
+        //end hovering if player exceeds hover time limit
         if (isHovering)
         {
             if (Time.time - hoverStartTime >= hoverTimeSeconds)
@@ -162,20 +170,19 @@ public class playerController2 : MonoBehaviour
             }
         }
 
+        //punch if punch button pressed/player not airborne
         if (isPunching && isGrounded)
         {
             animator.SetBool("isPunching", true);
-            //animator.SetTrigger("punchTrigger");
             freezeWalking = true;
             freezeJumping = true;
         }
 
-
     }
+
 
     void Jump()
     {
-        //Debug.Log("jumped");
         rb.velocity = rb.velocity + Vector3.up * jumpVelocity;
 
         animator.SetBool("isJumping", true);
