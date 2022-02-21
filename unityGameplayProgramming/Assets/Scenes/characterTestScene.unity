@@ -682,13 +682,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0.28199095, y: -0.12276582, z: 0.036409665, w: -0.9508334}
-  m_LocalPosition: {x: -3.58, y: 10.74, z: -13.77}
+  m_LocalRotation: {x: -0.13161458, y: -0.12691855, z: 0.016993975, w: -0.9829957}
+  m_LocalPosition: {x: -3.64, y: 6.87, z: -13.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 23.93, y: 22.98, z: 0}
+  m_LocalEulerAnglesHint: {x: 15.252, y: 14.714, z: 0}
 --- !u!1 &1081416008
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,11 +767,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a17cd5e65cec3744b2bd79a894dfca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7
+  walkSpeed: 7
+  runSpeed: 15
   turnSmoothTime: 0.2
   jumpVelocity: 20
   gravityScale: 5
   speedSmoothTime: 0.1
+  isRunning: 0
 --- !u!114 &1213184162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1108,11 +1110,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a17cd5e65cec3744b2bd79a894dfca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7
+  walkSpeed: 10
+  runSpeed: 20
   turnSmoothTime: 0.2
   jumpVelocity: 5
   gravityScale: 1
   speedSmoothTime: 0.1
+  isRunning: 0
 --- !u!1 &1797944448
 GameObject:
   m_ObjectHideFlags: 0

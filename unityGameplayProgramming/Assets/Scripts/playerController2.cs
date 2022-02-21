@@ -9,7 +9,8 @@ public class playerController2 : MonoBehaviour
     Vector2 move;
     Vector2 moveDirection;
 
-    public float speed = 10;
+    public float walkSpeed = 10;
+    public float runSpeed = 20;
 
     public float turnSmoothTime = 0.2f;
     float turnSmoothVelocity;
@@ -33,6 +34,8 @@ public class playerController2 : MonoBehaviour
 
     private LayerMask groundLayer;
 
+    public bool isRunning;
+
     
 
     // Start is called before the first frame update
@@ -45,6 +48,9 @@ public class playerController2 : MonoBehaviour
 
         controls.Player.Jump.performed += ctx => isJumping = true;
         controls.Player.Jump.canceled += ctx => isJumping = false;
+
+        controls.Player.Run.performed += ctx => isRunning = true;
+        controls.Player.Run.canceled += ctx => isRunning = false;
  
         animator = GetComponent<Animator>();
 
@@ -74,6 +80,9 @@ public class playerController2 : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
+        float speed = ((isRunning) ? runSpeed : walkSpeed) * move.magnitude;
+
         Vector3 movement = new Vector3(move.x, 0.0f, move.y) * speed * Time.deltaTime;
         transform.Translate(movement, Space.World);
 
@@ -85,7 +94,9 @@ public class playerController2 : MonoBehaviour
             transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, turnSmoothTime);
         }
 
-        float animationSpeedPercent = moveDirection.magnitude;
+        //float animationSpeedPercent = moveDirection.magnitude;
+
+        float animationSpeedPercent = ((isRunning)? 1 : 0.5f) * move.magnitude;
         animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
 
         Vector3 gravity = globalGravity * gravityScale * Vector3.up;
