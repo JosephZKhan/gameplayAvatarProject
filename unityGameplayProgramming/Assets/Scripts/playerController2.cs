@@ -48,6 +48,7 @@ public class playerController2 : MonoBehaviour
     bool isPunching;
 
     bool freezeWalking;
+    bool freezeJumping;
 
     
 
@@ -80,9 +81,6 @@ public class playerController2 : MonoBehaviour
         punchColl = GetComponent<BoxCollider>();
 
         punchColl.enabled = false;
-
-        Debug.Log(coll);
-        Debug.Log(punchColl);
 
         groundLayer = LayerMask.NameToLayer("Walkable");
     }
@@ -134,7 +132,7 @@ public class playerController2 : MonoBehaviour
         rb.AddForce(gravity, ForceMode.Acceleration);
 
 
-        if (isJumping && isGrounded)
+        if (isJumping && isGrounded && !freezeJumping)
         {
             Jump();
         }
@@ -169,6 +167,7 @@ public class playerController2 : MonoBehaviour
             animator.SetBool("isPunching", true);
             //animator.SetTrigger("punchTrigger");
             freezeWalking = true;
+            freezeJumping = true;
         }
 
 
@@ -186,6 +185,7 @@ public class playerController2 : MonoBehaviour
 
     void startHover()
     {
+        rb.velocity = new Vector3(0, -1.0f, 0);
         canStartHover = false;
         isHovering = true;
         hoverStartTime = Time.time;
@@ -213,7 +213,7 @@ public class playerController2 : MonoBehaviour
     public void punchDamageActivate()
     {
         punchColl.enabled = true;
-        Debug.Log("punch is lethal!");
+        //Debug.Log("punch is lethal!");
     }
 
     public void endPunch()
@@ -221,6 +221,7 @@ public class playerController2 : MonoBehaviour
         animator.SetBool("isPunching", false);
         //animator.ResetTrigger("punchTrigger");
         freezeWalking = false;
+        freezeJumping = false;
         punchColl.enabled = false;
     }
 }
