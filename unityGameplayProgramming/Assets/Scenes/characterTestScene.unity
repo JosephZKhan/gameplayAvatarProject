@@ -773,7 +773,9 @@ MonoBehaviour:
   jumpVelocity: 20
   gravityScale: 5
   speedSmoothTime: 0.1
-  isRunning: 0
+  hoverTriggered: 0
+  canHover: 0
+  hoverTimeSeconds: 2
 --- !u!114 &1213184162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1116,7 +1118,9 @@ MonoBehaviour:
   jumpVelocity: 5
   gravityScale: 1
   speedSmoothTime: 0.1
-  isRunning: 0
+  hoverTriggered: 0
+  canHover: 0
+  hoverTimeSeconds: 5
 --- !u!1 &1797944448
 GameObject:
   m_ObjectHideFlags: 0

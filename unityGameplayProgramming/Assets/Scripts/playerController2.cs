@@ -34,7 +34,13 @@ public class playerController2 : MonoBehaviour
 
     private LayerMask groundLayer;
 
-    public bool isRunning;
+    bool isRunning;
+
+    public bool hoverTriggered;
+    public bool canHover;
+    public float hoverTimeSeconds = 5.0f;
+
+    float hoverStartTime;
 
     
 
@@ -51,6 +57,9 @@ public class playerController2 : MonoBehaviour
 
         controls.Player.Run.performed += ctx => isRunning = true;
         controls.Player.Run.canceled += ctx => isRunning = false;
+
+        controls.Player.Hover.performed += ctx => hoverTriggered = true;
+        controls.Player.Hover.canceled += ctx => hoverTriggered = false;
  
         animator = GetComponent<Animator>();
 
@@ -108,16 +117,33 @@ public class playerController2 : MonoBehaviour
             Jump();
         }
 
+        if (hoverTriggered && !isGrounded)
+        {
+            startHover();
+        }
+        else
+        {
+            canHover = false;
+        }
+
     }
 
     void Jump()
     {
-        Debug.Log("jumped");
+        //Debug.Log("jumped");
         rb.velocity = rb.velocity + Vector3.up * jumpVelocity;
 
         animator.SetBool("isJumping", true);
 
         isJumping = false;
+    }
+
+    void startHover()
+    {
+        canHover = true;
+        hoverStartTime = Time.time;
+        Debug.Log(hoverStartTime);
+
     }
 
     void OnCollisionEnter(Collision other)
