@@ -772,10 +772,9 @@ MonoBehaviour:
   turnSmoothTime: 0.2
   jumpVelocity: 20
   gravityScale: 5
+  hoverGravityScale: 0.001
   speedSmoothTime: 0.1
-  hoverTriggered: 0
-  canHover: 0
-  hoverTimeSeconds: 2
+  hoverTimeSeconds: 1
 --- !u!114 &1213184162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -836,6 +835,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 1
+--- !u!65 &1213184167
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1213184160}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.51, y: 1, z: 1.08}
+  m_Center: {x: 0, y: 1.54, z: 1.42}
 --- !u!1001 &1221570488
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -857,15 +869,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4113180028769762301, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.26
+      value: -7.57
       objectReference: {fileID: 0}
     - target: {fileID: 4113180028769762301, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.43
+      value: 4.57
       objectReference: {fileID: 0}
     - target: {fileID: 4113180028769762301, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.72
+      value: -0.07
       objectReference: {fileID: 0}
     - target: {fileID: 4113180028769762301, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1117,9 +1129,8 @@ MonoBehaviour:
   turnSmoothTime: 0.2
   jumpVelocity: 5
   gravityScale: 1
+  hoverGravityScale: 0.5
   speedSmoothTime: 0.1
-  hoverTriggered: 0
-  canHover: 0
   hoverTimeSeconds: 5
 --- !u!1 &1797944448
 GameObject:
