@@ -18,6 +18,7 @@ public class playerController2 : MonoBehaviour
     bool isJumping;
     public float jumpVelocity = 5;
     public float gravityScale = 1.0f;
+    public float hoverGravityScale = 0.5f;
 
     public static float globalGravity = -9.81f;
 
@@ -36,9 +37,12 @@ public class playerController2 : MonoBehaviour
 
     bool isRunning;
 
-    public bool hoverTriggered;
-    public bool canHover;
+    bool hoverButtonPressed;
+    bool isHovering;
+    bool canStartHover;
     public float hoverTimeSeconds = 5.0f;
+
+
 
     float hoverStartTime;
 
@@ -58,8 +62,8 @@ public class playerController2 : MonoBehaviour
         controls.Player.Run.performed += ctx => isRunning = true;
         controls.Player.Run.canceled += ctx => isRunning = false;
 
-        controls.Player.Hover.performed += ctx => hoverTriggered = true;
-        controls.Player.Hover.canceled += ctx => hoverTriggered = false;
+        controls.Player.Hover.performed += ctx => hoverButtonPressed = true;
+        controls.Player.Hover.canceled += ctx => hoverButtonPressed = false;
  
         animator = GetComponent<Animator>();
 
@@ -90,7 +94,7 @@ public class playerController2 : MonoBehaviour
     void FixedUpdate()
     {
 
-        float speed = ((isRunning) ? runSpeed : walkSpeed) * move.magnitude;
+        float speed = ((isRunning && isGrounded) ? runSpeed : walkSpeed) * move.magnitude;
 
         Vector3 movement = new Vector3(move.x, 0.0f, move.y) * speed * Time.deltaTime;
         transform.Translate(movement, Space.World);
@@ -108,7 +112,12 @@ public class playerController2 : MonoBehaviour
         float animationSpeedPercent = ((isRunning)? 1 : 0.5f) * move.magnitude;
         animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
 
-        Vector3 gravity = globalGravity * gravityScale * Vector3.up;
+
+        Vector3 gravity = (isHovering) ? globalGravity * hoverGravityScale * Vector3.up : globalGravity * gravityScale * Vector3.up;
+
+
+
+
         rb.AddForce(gravity, ForceMode.Acceleration);
 
 
@@ -117,13 +126,30 @@ public class playerController2 : MonoBehaviour
             Jump();
         }
 
-        if (hoverTriggered && !isGrounded)
+        if (hoverButtonPressed && !isGrounded && rb.velocity.y < 0)
         {
-            startHover();
+            if (canStartHover)
+            {
+                startHover();
+            }
         }
         else
         {
-            canHover = false;
+            isHovering = false;
+        }
+
+        if (isGrounded)
+        {
+            canStartHover = true;
+        }
+
+        if (isHovering)
+        {
+            if (Time.time - hoverStartTime >= hoverTimeSeconds)
+            {
+                Debug.Log("STOP HOVERING");
+                isHovering = false;
+            }
         }
 
     }
@@ -140,10 +166,10 @@ public class playerController2 : MonoBehaviour
 
     void startHover()
     {
-        canHover = true;
+        canStartHover = false;
+        isHovering = true;
         hoverStartTime = Time.time;
         Debug.Log(hoverStartTime);
-
     }
 
     void OnCollisionEnter(Collision other)
