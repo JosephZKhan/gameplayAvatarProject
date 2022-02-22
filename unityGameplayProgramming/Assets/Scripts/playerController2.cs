@@ -74,7 +74,7 @@ public class playerController2 : MonoBehaviour
         controls.Player.Hover.performed += ctx => hoverButtonPressed = true;
         controls.Player.Hover.canceled += ctx => hoverButtonPressed = false;
 
-        controls.Player.Punch.performed += ctx => isPunching = true;
+        controls.Player.Punch.started += ctx => isPunching = true;
         controls.Player.Punch.canceled += ctx => isPunching = false;
  
         animator = GetComponent<Animator>();
