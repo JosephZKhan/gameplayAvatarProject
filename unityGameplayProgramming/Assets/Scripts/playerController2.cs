@@ -51,6 +51,7 @@ public class playerController2 : MonoBehaviour
     bool freezeJumping;
 
 
+
     
 
     // Start is called before the first frame update
@@ -180,25 +181,36 @@ public class playerController2 : MonoBehaviour
 
     }
 
-
+    //first frame of jump
     void Jump()
     {
+        //send player upwards
         rb.velocity = rb.velocity + Vector3.up * jumpVelocity;
 
+        //trigger jump animation
         animator.SetBool("isJumping", true);
 
+        //prevent repeated jumps in air
         isJumping = false;
     }
 
+    //first frame of hover
     void startHover()
     {
+        //slow player's descent
         rb.velocity = new Vector3(0, -1.0f, 0);
+
+        //prevent multiple hover triggers at once
         canStartHover = false;
+
+        //update hover status
         isHovering = true;
+
+        //record start time of hover for time limit
         hoverStartTime = Time.time;
-        //Debug.Log(hoverStartTime);
     }
 
+    //detect collision with objects on ground layer for isGrounded bool
     void OnCollisionEnter(Collision other)
     {
         if (other.collider.gameObject.layer == groundLayer)
@@ -217,16 +229,18 @@ public class playerController2 : MonoBehaviour
         }
     }
 
+    //function for activating punch hitbox
+    //triggered by animation event
     public void punchDamageActivate()
     {
         punchColl.enabled = true;
-        //Debug.Log("punch is lethal!");
     }
 
+    //function for ending puncch
+    //triggered by animation event
     public void endPunch()
     {
         animator.SetBool("isPunching", false);
-        //animator.ResetTrigger("punchTrigger");
         freezeWalking = false;
         freezeJumping = false;
         punchColl.enabled = false;
