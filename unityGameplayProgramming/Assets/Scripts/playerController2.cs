@@ -65,6 +65,7 @@ public class playerController2 : MonoBehaviour
     {
         controls = new PlayerControls();
         //controls.Player.Move.performed += ctx => SendMessage(ctx.ReadValue<Vector2>());
+
         controls.Player.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => move = Vector2.zero;
 
@@ -129,11 +130,12 @@ public class playerController2 : MonoBehaviour
 
             //update movement
             Vector3 movement = new Vector3(move.x, 0.0f, move.y) * speed * Time.deltaTime;
-            //transform.Translate(movement, Space.World);
             rb.AddForce(movement, ForceMode.VelocityChange);
 
             //normalize movement for rotation
             Vector2 moveDirection = move.normalized;
+
+            
 
             //if the user moves player
             if (moveDirection != Vector2.zero)
