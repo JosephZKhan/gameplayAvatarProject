@@ -530,7 +530,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 17c44fb3e5be9644586a0728a5f5a386, type: 2}
+  - {fileID: 2100000, guid: b0b4de3bd6e976e4f8b3adc6e72377ed, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -798,7 +798,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 30
   m_Drag: 10
-  m_AngularDrag: 0.05
+  m_AngularDrag: 50000
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -895,7 +895,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7808535087605715845, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.82
+      value: 5.05
       objectReference: {fileID: 0}
     - target: {fileID: 7808535087605715845, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -952,7 +952,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7808535087605715845, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.82
+      value: 5.05
       objectReference: {fileID: 0}
     - target: {fileID: 7808535087605715845, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1009,7 +1009,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7808535087605715845, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.94
+      value: 6.17
       objectReference: {fileID: 0}
     - target: {fileID: 7808535087605715845, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1135,7 +1135,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7808535087605715845, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.11
+      value: 3.34
       objectReference: {fileID: 0}
     - target: {fileID: 7808535087605715845, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_LocalPosition.z
