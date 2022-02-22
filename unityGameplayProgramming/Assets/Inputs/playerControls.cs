@@ -73,6 +73,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""cameraControl"",
+                    ""type"": ""Value"",
+                    ""id"": ""03a6b683-c604-436c-87ea-fc96ff0bf9dc"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -449,6 +457,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Punch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dc1d56a0-80cc-4a05-9c47-9dcb970a754c"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""cameraControl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -487,6 +506,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_Hover = m_Player.FindAction("Hover", throwIfNotFound: true);
         m_Player_Punch = m_Player.FindAction("Punch", throwIfNotFound: true);
+        m_Player_cameraControl = m_Player.FindAction("cameraControl", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -543,6 +563,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_Hover;
     private readonly InputAction m_Player_Punch;
+    private readonly InputAction m_Player_cameraControl;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -554,6 +575,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @Hover => m_Wrapper.m_Player_Hover;
         public InputAction @Punch => m_Wrapper.m_Player_Punch;
+        public InputAction @cameraControl => m_Wrapper.m_Player_cameraControl;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -584,6 +606,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Punch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPunch;
                 @Punch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPunch;
                 @Punch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPunch;
+                @cameraControl.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraControl;
+                @cameraControl.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraControl;
+                @cameraControl.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraControl;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -609,6 +634,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Punch.started += instance.OnPunch;
                 @Punch.performed += instance.OnPunch;
                 @Punch.canceled += instance.OnPunch;
+                @cameraControl.started += instance.OnCameraControl;
+                @cameraControl.performed += instance.OnCameraControl;
+                @cameraControl.canceled += instance.OnCameraControl;
             }
         }
     }
@@ -640,5 +668,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnHover(InputAction.CallbackContext context);
         void OnPunch(InputAction.CallbackContext context);
+        void OnCameraControl(InputAction.CallbackContext context);
     }
 }

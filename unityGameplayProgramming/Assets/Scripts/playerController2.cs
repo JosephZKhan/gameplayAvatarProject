@@ -53,6 +53,9 @@ public class playerController2 : MonoBehaviour
 
     float distanceToGround;
 
+    float punchStartTime;
+    float punchDuration;
+
 
 
 
@@ -88,6 +91,8 @@ public class playerController2 : MonoBehaviour
         punchColl.enabled = false;
 
         distanceToGround = coll.bounds.extents.y - 1.25f;
+
+        //punchDuration = animator.GetCurrentAnimatorStateInfo(0).length * 0.66f;
 
         
 
@@ -196,7 +201,11 @@ public class playerController2 : MonoBehaviour
             animator.SetBool("isPunching", true);
             freezeWalking = true;
             freezeJumping = true;
+            punchStartTime = Time.time;
+            //StartCoroutine(endPunch1());
         }
+
+
 
     }
 
@@ -229,24 +238,6 @@ public class playerController2 : MonoBehaviour
         hoverStartTime = Time.time;
     }
 
-/*    //detect collision with objects on ground layer for isGrounded bool
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.collider.gameObject.layer == groundLayer)
-        {
-            isGrounded = true;
-
-            animator.SetBool("isJumping", false);
-        }
-    }
-
-    void OnCollisionExit(Collision other)
-    {
-        if (other.collider.gameObject.layer == groundLayer)
-        {
-            isGrounded = false;
-        }
-    }*/
 
 
 
@@ -272,4 +263,16 @@ public class playerController2 : MonoBehaviour
     {
         isSpeedBoosted = true;
     }
+
+    /*IEnumerator endPunch1()
+    {
+        yield return new WaitForSeconds(punchDuration);
+        animator.SetBool("isPunching", false);
+        freezeWalking = false;
+        freezeJumping = false;
+        punchColl.enabled = false;
+        Debug.Log("punch has ended");
+    }*/
+
+
 }
