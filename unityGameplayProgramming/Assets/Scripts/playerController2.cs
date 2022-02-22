@@ -50,9 +50,14 @@ public class playerController2 : MonoBehaviour
     bool freezeWalking;
     bool freezeJumping;
 
+    bool isSpeedBoosted;
+    public float speedBoostMagnitude = 2.0f;
+
+    float distanceToGround;
 
 
-    
+
+
 
     // Start is called before the first frame update
     void Awake()
@@ -86,6 +91,10 @@ public class playerController2 : MonoBehaviour
 
         groundLayer = LayerMask.NameToLayer("Walkable");
 
+        distanceToGround = coll.bounds.extents.y;
+
+        
+
     }
 
     private void OnEnable()
@@ -111,9 +120,16 @@ public class playerController2 : MonoBehaviour
             //use isRunning bool to set movement speed. scaled with move magnitude
             float speed = ((isRunning && isGrounded) ? runSpeed : walkSpeed) * move.magnitude;
 
+            if (isSpeedBoosted)
+            {
+                speed = speed * speedBoostMagnitude;
+                isRunning = true;
+            }
+
             //update movement
             Vector3 movement = new Vector3(move.x, 0.0f, move.y) * speed * Time.deltaTime;
-            transform.Translate(movement, Space.World);
+            //transform.Translate(movement, Space.World);
+            rb.AddForce(movement, ForceMode.VelocityChange);
 
             //normalize movement for rotation
             Vector2 moveDirection = move.normalized;
@@ -136,6 +152,13 @@ public class playerController2 : MonoBehaviour
 
         //accelerate player downwards by gravity
         rb.AddForce(gravity, ForceMode.Acceleration);
+
+        //update isGrounded
+        isGrounded = Physics.Raycast(transform.position, -Vector3.up, distanceToGround + 0.1f);
+        if (isGrounded)
+        {
+            animator.SetBool("isJumping", false);
+        }
 
         //start a jump if player is on ground/jump button pressed/jumping isn't frozen
         if (isJumping && isGrounded && !freezeJumping)
@@ -197,6 +220,9 @@ public class playerController2 : MonoBehaviour
     //first frame of hover
     void startHover()
     {
+
+        animator.SetBool("isJumping", true);
+
         //slow player's descent
         rb.velocity = new Vector3(0, -1.0f, 0);
 
@@ -210,24 +236,8 @@ public class playerController2 : MonoBehaviour
         hoverStartTime = Time.time;
     }
 
-    //detect collision with objects on ground layer for isGrounded bool
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.collider.gameObject.layer == groundLayer)
-        {
-            isGrounded = true;
 
-            animator.SetBool("isJumping", false);
-        }
-    }
 
-    void OnCollisionExit(Collision other)
-    {
-        if (other.collider.gameObject.layer == groundLayer)
-        {
-            isGrounded = false;
-        }
-    }
 
     //function for activating punch hitbox
     //triggered by animation event
@@ -236,7 +246,7 @@ public class playerController2 : MonoBehaviour
         punchColl.enabled = true;
     }
 
-    //function for ending puncch
+    //function for ending punch
     //triggered by animation event
     public void endPunch()
     {
@@ -244,5 +254,10 @@ public class playerController2 : MonoBehaviour
         freezeWalking = false;
         freezeJumping = false;
         punchColl.enabled = false;
+    }
+
+    public void speedPowerUp()
+    {
+        isSpeedBoosted = true;
     }
 }
