@@ -34,8 +34,6 @@ public class playerController2 : MonoBehaviour
     Collider coll;
     Collider punchColl;
 
-    private LayerMask groundLayer;
-
     bool isRunning;
 
     bool hoverButtonPressed;
@@ -89,9 +87,7 @@ public class playerController2 : MonoBehaviour
 
         punchColl.enabled = false;
 
-        groundLayer = LayerMask.NameToLayer("Walkable");
-
-        distanceToGround = coll.bounds.extents.y;
+        distanceToGround = coll.bounds.extents.y - 1.25f;
 
         
 
@@ -154,7 +150,7 @@ public class playerController2 : MonoBehaviour
         rb.AddForce(gravity, ForceMode.Acceleration);
 
         //update isGrounded
-        isGrounded = Physics.Raycast(transform.position, -Vector3.up, distanceToGround + 0.1f);
+        isGrounded = Physics.Raycast(coll.transform.position, -Vector3.up, distanceToGround);
         if (isGrounded)
         {
             animator.SetBool("isJumping", false);
@@ -220,9 +216,6 @@ public class playerController2 : MonoBehaviour
     //first frame of hover
     void startHover()
     {
-
-        animator.SetBool("isJumping", true);
-
         //slow player's descent
         rb.velocity = new Vector3(0, -1.0f, 0);
 
@@ -235,6 +228,25 @@ public class playerController2 : MonoBehaviour
         //record start time of hover for time limit
         hoverStartTime = Time.time;
     }
+
+/*    //detect collision with objects on ground layer for isGrounded bool
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.collider.gameObject.layer == groundLayer)
+        {
+            isGrounded = true;
+
+            animator.SetBool("isJumping", false);
+        }
+    }
+
+    void OnCollisionExit(Collision other)
+    {
+        if (other.collider.gameObject.layer == groundLayer)
+        {
+            isGrounded = false;
+        }
+    }*/
 
 
 
