@@ -172,17 +172,25 @@ public class playerController2 : MonoBehaviour
             Jump();
         }
 
-        //start a hover if hover button pressed/player is falling
-        if (hoverButtonPressed && !isGrounded && rb.velocity.y < 0)
+        animator.SetBool("isFalling", false);
+
+        //detect player falling
+        if (!isGrounded && rb.velocity.y < 0)
         {
-            if (canStartHover)
+
+            animator.SetBool("isFalling", true);
+            //trigger hover event if appropriate
+            if (hoverButtonPressed)
             {
-                startHover();
+                if (canStartHover)
+                {
+                    startHover();
+                }
             }
-        }
-        else
-        {
-            isHovering = false;
+            else
+            {
+                isHovering = false;
+            }
         }
 
         //re-enable hovering when player lands
