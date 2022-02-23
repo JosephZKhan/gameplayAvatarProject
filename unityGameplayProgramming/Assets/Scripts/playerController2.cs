@@ -160,7 +160,7 @@ public class playerController2 : MonoBehaviour
         rb.AddForce(gravity, ForceMode.Acceleration);
 
         //update isGrounded
-        isGrounded = Physics.Raycast(coll.transform.position, -Vector3.up, distanceToGround);
+        isGrounded = Physics.Raycast(coll.transform.position, -Vector3.up, distanceToGround + 0.5f);
         if (isGrounded)
         {
             animator.SetBool("isJumping", false);
@@ -172,10 +172,34 @@ public class playerController2 : MonoBehaviour
             Jump();
         }
 
-        animator.SetBool("isFalling", false);
+        
+
+        if (rb.velocity.y < 0)
+        {
+            if (isGrounded)
+            {
+                rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
+                animator.SetBool("isFalling", false);
+            }
+            else
+            {
+                animator.SetBool("isFalling", true);
+                if (hoverButtonPressed)
+                {
+                    if (canStartHover)
+                    {
+                        startHover();
+                    }
+                }
+                else
+                {
+                    isHovering = false;
+                }
+            }
+        }
 
         //detect player falling
-        if (!isGrounded && rb.velocity.y < 0)
+/*        if (!isGrounded && rb.velocity.y < 0)
         {
 
             animator.SetBool("isFalling", true);
@@ -191,7 +215,7 @@ public class playerController2 : MonoBehaviour
             {
                 isHovering = false;
             }
-        }
+        }*/
 
         //re-enable hovering when player lands
         if (isGrounded)
@@ -214,6 +238,7 @@ public class playerController2 : MonoBehaviour
             animator.SetBool("isPunching", true);
             freezeWalking = true;
             freezeJumping = true;
+            isPunching = false;
             //punchStartTime = Time.time;
             //StartCoroutine(endPunch1());
         }
