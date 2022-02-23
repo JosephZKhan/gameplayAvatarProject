@@ -81,6 +81,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""4b2ae9e8-7bef-4c3e-b76a-517c40640188"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -468,6 +476,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""cameraControl"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""201e0efc-5863-42cf-891a-0f69c7ea27a3"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc5f309d-9f0d-440a-9b2c-a39dd497f9d1"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -507,6 +537,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player_Hover = m_Player.FindAction("Hover", throwIfNotFound: true);
         m_Player_Punch = m_Player.FindAction("Punch", throwIfNotFound: true);
         m_Player_cameraControl = m_Player.FindAction("cameraControl", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -564,6 +595,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Hover;
     private readonly InputAction m_Player_Punch;
     private readonly InputAction m_Player_cameraControl;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -576,6 +608,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Hover => m_Wrapper.m_Player_Hover;
         public InputAction @Punch => m_Wrapper.m_Player_Punch;
         public InputAction @cameraControl => m_Wrapper.m_Player_cameraControl;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -609,6 +642,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @cameraControl.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraControl;
                 @cameraControl.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraControl;
                 @cameraControl.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraControl;
+                @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -637,6 +673,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @cameraControl.started += instance.OnCameraControl;
                 @cameraControl.performed += instance.OnCameraControl;
                 @cameraControl.canceled += instance.OnCameraControl;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -669,5 +708,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnHover(InputAction.CallbackContext context);
         void OnPunch(InputAction.CallbackContext context);
         void OnCameraControl(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }

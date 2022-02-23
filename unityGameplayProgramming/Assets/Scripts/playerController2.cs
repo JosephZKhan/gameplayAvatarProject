@@ -56,6 +56,9 @@ public class playerController2 : MonoBehaviour
     public float speedBoostDuration = 5.0f;
     public float speedBoostStartTime;
 
+    public static bool gamePaused;
+    bool pauseButtonPressed;
+
     //float punchStartTime;
     //float punchDuration;
 
@@ -83,6 +86,9 @@ public class playerController2 : MonoBehaviour
 
         controls.Player.Punch.started += ctx => isPunching = true;
         controls.Player.Punch.canceled += ctx => isPunching = false;
+
+        controls.Player.Pause.started += ctx => pauseButtonPressed = true;
+        controls.Player.Pause.canceled += ctx => pauseButtonPressed = false;
  
         animator = GetComponent<Animator>();
 
@@ -115,6 +121,16 @@ public class playerController2 : MonoBehaviour
     void SendMessage(Vector2 coordinates)
     {
         Debug.Log("Thumb-stick coordinates = " + coordinates);
+    }
+
+    void Update()
+    {
+        if (pauseButtonPressed)
+        {
+            pauseButtonPressed = false;
+            gamePaused = !gamePaused;
+            pauseGame();
+        }
     }
 
     void FixedUpdate()
@@ -198,25 +214,6 @@ public class playerController2 : MonoBehaviour
             }
         }
 
-        //detect player falling
-/*        if (!isGrounded && rb.velocity.y < 0)
-        {
-
-            animator.SetBool("isFalling", true);
-            //trigger hover event if appropriate
-            if (hoverButtonPressed)
-            {
-                if (canStartHover)
-                {
-                    startHover();
-                }
-            }
-            else
-            {
-                isHovering = false;
-            }
-        }*/
-
         //re-enable hovering when player lands
         if (isGrounded)
         {
@@ -255,8 +252,6 @@ public class playerController2 : MonoBehaviour
                 animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
             }
         }
-
-
 
     }
 
@@ -315,6 +310,18 @@ public class playerController2 : MonoBehaviour
     {
         isSpeedBoosted = true;
         speedBoostStartTime = Time.time;
+    }
+
+    void pauseGame()
+    {
+        if (gamePaused)
+        {
+            Time.timeScale = 0.0f;
+        }
+        else
+        {
+            Time.timeScale = 1.0f;
+        }
     }
 
 }
