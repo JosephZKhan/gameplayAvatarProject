@@ -17,12 +17,10 @@ public class pauseMenuScript : MonoBehaviour
     {
         if (playerController2.gamePaused)
         {
-            Debug.Log("paused");
             pauseMenu.SetActive(true);
         }
         else
         {
-            Debug.Log("play");
             pauseMenu.SetActive(false);
         }
     }

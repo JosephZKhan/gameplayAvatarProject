@@ -202,6 +202,7 @@ public class playerController2 : MonoBehaviour
                 animator.SetBool("isFalling", true);
                 if (hoverButtonPressed)
                 {
+
                     if (canStartHover)
                     {
                         startHover();
