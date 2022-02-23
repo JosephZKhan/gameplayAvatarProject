@@ -5,7 +5,6 @@ using UnityEngine;
 public class speedPowerUp : MonoBehaviour
 {
 
-    public float rotationSpeed;
     GameObject playerRef;
     Collider playerColliderRef;
     playerController2 playerScriptRef;
@@ -18,12 +17,6 @@ public class speedPowerUp : MonoBehaviour
         playerColliderRef = playerRef.GetComponent<CapsuleCollider>();
         playerScriptRef = playerRef.GetComponent<playerController2>();
         Debug.Log(playerScriptRef);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        transform.Rotate(0.0f, rotationSpeed, 0.0f);
     }
 
     void OnTriggerEnter(Collider other)

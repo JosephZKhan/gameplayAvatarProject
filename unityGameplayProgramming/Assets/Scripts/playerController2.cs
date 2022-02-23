@@ -53,8 +53,11 @@ public class playerController2 : MonoBehaviour
 
     float distanceToGround;
 
-    float punchStartTime;
-    float punchDuration;
+    public float speedBoostDuration = 5.0f;
+    public float speedBoostStartTime;
+
+    //float punchStartTime;
+    //float punchDuration;
 
 
 
@@ -203,8 +206,21 @@ public class playerController2 : MonoBehaviour
             animator.SetBool("isPunching", true);
             freezeWalking = true;
             freezeJumping = true;
-            punchStartTime = Time.time;
+            //punchStartTime = Time.time;
             //StartCoroutine(endPunch1());
+        }
+
+        if (isSpeedBoosted)
+        {
+            if (Time.time - speedBoostStartTime >= speedBoostDuration)
+            {
+                isSpeedBoosted = false;
+                isRunning = false;
+                
+                //update blend tree to determing walking/running animation
+                float animationSpeedPercent = ((isRunning) ? 1 : 0.5f) * move.magnitude;
+                animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
+            }
         }
 
 
@@ -259,22 +275,13 @@ public class playerController2 : MonoBehaviour
         freezeWalking = false;
         freezeJumping = false;
         punchColl.enabled = false;
+        Debug.Log("punch ended.");
     }
 
     public void speedPowerUp()
     {
         isSpeedBoosted = true;
+        speedBoostStartTime = Time.time;
     }
-
-    /*IEnumerator endPunch1()
-    {
-        yield return new WaitForSeconds(punchDuration);
-        animator.SetBool("isPunching", false);
-        freezeWalking = false;
-        freezeJumping = false;
-        punchColl.enabled = false;
-        Debug.Log("punch has ended");
-    }*/
-
 
 }
