@@ -11,7 +11,7 @@ public class generalPowerupMovement : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         transform.Rotate(0.0f, rotationSpeed, 0.0f);
 
