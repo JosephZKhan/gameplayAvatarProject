@@ -59,13 +59,6 @@ public class playerController2 : MonoBehaviour
     public static bool gamePaused;
     bool pauseButtonPressed;
 
-    //float punchStartTime;
-    //float punchDuration;
-
-
-
-
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -284,10 +277,6 @@ public class playerController2 : MonoBehaviour
         //record start time of hover for time limit
         hoverStartTime = Time.time;
     }
-
-
-
-
 
     //function for activating punch hitbox
     //triggered by animation event
