@@ -59,6 +59,10 @@ public class playerController2 : MonoBehaviour
     public static bool gamePaused;
     bool pauseButtonPressed;
 
+    ParticleSystem punchParticles;
+
+    //public int jumpsLeft = 1;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -94,6 +98,8 @@ public class playerController2 : MonoBehaviour
         punchColl.enabled = false;
 
         distanceToGround = coll.bounds.extents.y - 1.25f;
+
+        punchParticles = GetComponentInChildren<ParticleSystem>();
 
         //punchDuration = animator.GetCurrentAnimatorStateInfo(0).length * 0.66f;
 
@@ -226,12 +232,7 @@ public class playerController2 : MonoBehaviour
         //punch if punch button pressed/player not airborne
         if (isPunching && isGrounded)
         {
-            animator.SetBool("isPunching", true);
-            freezeWalking = true;
-            freezeJumping = true;
-            isPunching = false;
-            //punchStartTime = Time.time;
-            //StartCoroutine(endPunch1());
+            startPunch();
         }
 
         if (isSpeedBoosted)
@@ -260,6 +261,8 @@ public class playerController2 : MonoBehaviour
 
         //prevent repeated jumps in air
         isJumping = false;
+
+        //jumpsLeft -= 1;
     }
 
     //first frame of hover
@@ -278,6 +281,14 @@ public class playerController2 : MonoBehaviour
         hoverStartTime = Time.time;
     }
 
+    void startPunch()
+    {
+        animator.SetBool("isPunching", true);
+        freezeWalking = true;
+        freezeJumping = true;
+        isPunching = false;
+    }
+
     //function for activating punch hitbox
     //triggered by animation event
     public void punchDamageActivate()
@@ -293,7 +304,6 @@ public class playerController2 : MonoBehaviour
         freezeWalking = false;
         freezeJumping = false;
         punchColl.enabled = false;
-        Debug.Log("punch ended.");
     }
 
     public void speedPowerUp()
@@ -312,6 +322,11 @@ public class playerController2 : MonoBehaviour
         {
             Time.timeScale = 1.0f;
         }
+    }
+
+    public void triggerPunchEffect()
+    {
+        punchParticles.Play();
     }
 
 }

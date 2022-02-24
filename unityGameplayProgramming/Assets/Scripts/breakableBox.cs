@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class breakableBox : MonoBehaviour
 {
+    GameObject playerRef;
     Collider playerPunch;
+    playerController2 playerScriptRef;
 
     // Start is called before the first frame update
     void Start()
     {
-        playerPunch = GameObject.FindWithTag("Player").GetComponent<BoxCollider>();
+        playerRef = GameObject.FindWithTag("Player");
+        playerPunch = playerRef.GetComponent<BoxCollider>();
+        playerScriptRef = playerRef.GetComponent<playerController2>();
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other == playerPunch && other.enabled)
         {
+            playerScriptRef.triggerPunchEffect();
             Destroy(gameObject);
         }
     }
