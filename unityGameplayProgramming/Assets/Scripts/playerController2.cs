@@ -54,14 +54,18 @@ public class playerController2 : MonoBehaviour
     float distanceToGround;
 
     public float speedBoostDuration = 5.0f;
-    public float speedBoostStartTime;
+    float speedBoostStartTime;
 
     public static bool gamePaused;
     bool pauseButtonPressed;
 
     ParticleSystem punchParticles;
 
-    public int jumpsLeft = 2;
+    int jumpsLeft = 1;
+
+    bool hasDoubleJump;
+    public float doubleJumpDuration = 5.0f;
+    float doubleJumpStartTime;
 
     // Start is called before the first frame update
     void Awake()
@@ -180,7 +184,7 @@ public class playerController2 : MonoBehaviour
         {
             animator.SetBool("isJumping", false);
             canStartHover = true;
-            jumpsLeft = 2;
+            jumpsLeft = 1;
         }
 
         //start a jump if player is on ground/jump button pressed/jumping isn't frozen
