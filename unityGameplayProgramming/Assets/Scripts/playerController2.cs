@@ -61,7 +61,7 @@ public class playerController2 : MonoBehaviour
 
     ParticleSystem punchParticles;
 
-    //public int jumpsLeft = 1;
+    public int jumpsLeft = 1;
 
     // Start is called before the first frame update
     void Awake()
@@ -262,7 +262,7 @@ public class playerController2 : MonoBehaviour
         //prevent repeated jumps in air
         isJumping = false;
 
-        //jumpsLeft -= 1;
+        jumpsLeft -= 1;
     }
 
     //first frame of hover
