@@ -15,7 +15,7 @@ public class playerController2 : MonoBehaviour
     public float turnSmoothTime = 0.2f;
     float turnSmoothVelocity;
 
-    bool isJumping;
+    bool jumpButtonPressed;
     public float jumpVelocity = 5;
     public float gravityScale = 1.0f;
     public float hoverGravityScale = 0.5f;
@@ -61,7 +61,7 @@ public class playerController2 : MonoBehaviour
 
     ParticleSystem punchParticles;
 
-    public int jumpsLeft = 1;
+    public int jumpsLeft = 2;
 
     // Start is called before the first frame update
     void Awake()
@@ -72,8 +72,8 @@ public class playerController2 : MonoBehaviour
         controls.Player.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => move = Vector2.zero;
 
-        controls.Player.Jump.performed += ctx => isJumping = true;
-        controls.Player.Jump.canceled += ctx => isJumping = false;
+        controls.Player.Jump.started += ctx => jumpButtonPressed = true;
+        controls.Player.Jump.canceled += ctx => jumpButtonPressed = false;
 
         controls.Player.Run.performed += ctx => isRunning = true;
         controls.Player.Run.canceled += ctx => isRunning = false;
@@ -179,10 +179,12 @@ public class playerController2 : MonoBehaviour
         if (isGrounded)
         {
             animator.SetBool("isJumping", false);
+            canStartHover = true;
+            jumpsLeft = 2;
         }
 
         //start a jump if player is on ground/jump button pressed/jumping isn't frozen
-        if (isJumping && isGrounded && !freezeJumping)
+        if (jumpButtonPressed && jumpsLeft > 0 && !freezeJumping)
         {
             Jump();
         }
@@ -199,26 +201,24 @@ public class playerController2 : MonoBehaviour
             else
             {
                 animator.SetBool("isFalling", true);
-                if (hoverButtonPressed)
+                if (jumpsLeft == 0)
                 {
-
-                    if (canStartHover)
+                    if (hoverButtonPressed)
                     {
-                        startHover();
+
+                        if (canStartHover)
+                        {
+                            startHover();
+                        }
                     }
-                }
-                else
-                {
-                    isHovering = false;
+                    else
+                    {
+                        isHovering = false;
+                    }
                 }
             }
         }
 
-        //re-enable hovering when player lands
-        if (isGrounded)
-        {
-            canStartHover = true;
-        }
 
         //end hovering if player exceeds hover time limit
         if (isHovering)
@@ -260,7 +260,7 @@ public class playerController2 : MonoBehaviour
         animator.SetBool("isJumping", true);
 
         //prevent repeated jumps in air
-        isJumping = false;
+        jumpButtonPressed = false;
 
         jumpsLeft -= 1;
     }
