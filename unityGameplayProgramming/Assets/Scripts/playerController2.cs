@@ -61,7 +61,7 @@ public class playerController2 : MonoBehaviour
 
     ParticleSystem punchParticles;
 
-    int jumpsLeft = 1;
+    int jumpsLeft = 2;
 
     bool hasDoubleJump;
     public float doubleJumpDuration = 5.0f;
@@ -184,7 +184,7 @@ public class playerController2 : MonoBehaviour
         {
             animator.SetBool("isJumping", false);
             canStartHover = true;
-            jumpsLeft = 1;
+            jumpsLeft = 2;
         }
 
         //start a jump if player is on ground/jump button pressed/jumping isn't frozen
