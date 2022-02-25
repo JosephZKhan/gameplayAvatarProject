@@ -208,7 +208,12 @@ public class playerController2 : MonoBehaviour
             }
             else
             {
-                animator.SetBool("isFalling", true);
+                if (animator.GetBool("isJumping") == false)
+                {
+                    animator.SetBool("isFalling", true);
+                    jumpsLeft = 0;
+                }
+
                 if (jumpsLeft == 0)
                 {
                     if (hoverButtonPressed)
@@ -224,6 +229,7 @@ public class playerController2 : MonoBehaviour
                         isHovering = false;
                     }
                 }
+
             }
         }
 
