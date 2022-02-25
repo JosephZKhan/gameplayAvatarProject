@@ -67,6 +67,8 @@ public class playerController2 : MonoBehaviour
     public float doubleJumpDuration = 5.0f;
     float doubleJumpStartTime;
 
+    public hoverMeterScript hoverMeter;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -104,6 +106,8 @@ public class playerController2 : MonoBehaviour
         distanceToGround = coll.bounds.extents.y - 1.25f;
 
         punchParticles = GetComponentInChildren<ParticleSystem>();
+
+        hoverMeter.setMaxValue(hoverTimeSeconds);
 
         //punchDuration = animator.GetCurrentAnimatorStateInfo(0).length * 0.66f;
 
@@ -205,6 +209,7 @@ public class playerController2 : MonoBehaviour
             {
                 rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
                 animator.SetBool("isFalling", false);
+                hoverMeter.setValue(hoverTimeSeconds);
             }
             else
             {
@@ -241,6 +246,8 @@ public class playerController2 : MonoBehaviour
             {
                 isHovering = false;
             }
+
+            hoverMeter.setValue(Time.time - hoverStartTime);
         }
 
         //punch if punch button pressed/player not airborne
