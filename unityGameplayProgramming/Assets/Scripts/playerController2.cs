@@ -61,7 +61,7 @@ public class playerController2 : MonoBehaviour
 
     ParticleSystem punchParticles;
 
-    int jumpsLeft = 2;
+    int jumpsLeft = 1;
 
     bool hasDoubleJump;
     public float doubleJumpDuration = 5.0f;
@@ -184,7 +184,11 @@ public class playerController2 : MonoBehaviour
         {
             animator.SetBool("isJumping", false);
             canStartHover = true;
-            jumpsLeft = 2;
+            jumpsLeft = 1;
+            if (hasDoubleJump)
+            {
+                jumpsLeft = 2;
+            }
         }
 
         //start a jump if player is on ground/jump button pressed/jumping isn't frozen
@@ -249,6 +253,14 @@ public class playerController2 : MonoBehaviour
                 //update blend tree to determing walking/running animation
                 float animationSpeedPercent = ((isRunning) ? 1 : 0.5f) * move.magnitude;
                 animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
+            }
+        }
+
+        if (hasDoubleJump)
+        {
+            if (Time.time - doubleJumpStartTime >= doubleJumpDuration)
+            {
+                hasDoubleJump = false;
             }
         }
 
@@ -331,6 +343,12 @@ public class playerController2 : MonoBehaviour
     public void triggerPunchEffect()
     {
         punchParticles.Play();
+    }
+
+    public void doubleJumpPowerUp()
+    {
+        hasDoubleJump = true;
+        doubleJumpStartTime = Time.time;
     }
 
 }

@@ -28,6 +28,18 @@ MonoBehaviour:
   movementSpeed: -0.35
   movementRange: 0.26
   rotationSpeed: 1
+--- !u!114 &2978492112129588443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638511108753922113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21c1121f6af2b9541b91ff41f4bf3d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5634106834569780320
 GameObject:
   m_ObjectHideFlags: 0
