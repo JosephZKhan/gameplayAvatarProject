@@ -67,7 +67,9 @@ public class playerController2 : MonoBehaviour
     public float doubleJumpDuration = 5.0f;
     float doubleJumpStartTime;
 
-    public hoverMeterScript hoverMeter;
+    public fillingMeterScript hoverMeter;
+    public fillingMeterScript doubleJumpMeter;
+    public fillingMeterScript speedBoostMeter;
 
     // Start is called before the first frame update
     void Awake()
@@ -108,6 +110,10 @@ public class playerController2 : MonoBehaviour
         punchParticles = GetComponentInChildren<ParticleSystem>();
 
         hoverMeter.setMaxValue(hoverTimeSeconds);
+
+        doubleJumpMeter.setMaxValue(doubleJumpDuration);
+
+        speedBoostMeter.setMaxValue(speedBoostDuration);
 
         //punchDuration = animator.GetCurrentAnimatorStateInfo(0).length * 0.66f;
 
@@ -210,6 +216,7 @@ public class playerController2 : MonoBehaviour
                 rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
                 animator.SetBool("isFalling", false);
                 hoverMeter.setValue(hoverTimeSeconds);
+                hoverMeter.despawnBackground();
             }
             else
             {
@@ -245,9 +252,11 @@ public class playerController2 : MonoBehaviour
             if (Time.time - hoverStartTime >= hoverTimeSeconds)
             {
                 isHovering = false;
+                
             }
 
             hoverMeter.setValue(Time.time - hoverStartTime);
+          
         }
 
         //punch if punch button pressed/player not airborne
@@ -267,6 +276,11 @@ public class playerController2 : MonoBehaviour
                 float animationSpeedPercent = ((isRunning) ? 1 : 0.5f) * move.magnitude;
                 animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
             }
+            speedBoostMeter.setValue(Time.time - speedBoostStartTime);
+        }
+        else
+        {
+            speedBoostMeter.despawnBackground();
         }
 
         if (hasDoubleJump)
@@ -275,6 +289,11 @@ public class playerController2 : MonoBehaviour
             {
                 hasDoubleJump = false;
             }
+            doubleJumpMeter.setValue(Time.time - doubleJumpStartTime);
+        }
+        else
+        {
+            doubleJumpMeter.despawnBackground();
         }
 
     }
@@ -308,6 +327,9 @@ public class playerController2 : MonoBehaviour
 
         //record start time of hover for time limit
         hoverStartTime = Time.time;
+
+        //spawn hover meter background
+        hoverMeter.spawnBackground();
     }
 
     void startPunch()
@@ -339,6 +361,7 @@ public class playerController2 : MonoBehaviour
     {
         isSpeedBoosted = true;
         speedBoostStartTime = Time.time;
+        speedBoostMeter.spawnBackground();
     }
 
     void pauseGame()
@@ -362,6 +385,8 @@ public class playerController2 : MonoBehaviour
     {
         hasDoubleJump = true;
         doubleJumpStartTime = Time.time;
+        //doubleJumpMeter.setValue(doubleJumpDuration);
+        doubleJumpMeter.spawnBackground();
     }
 
 }
