@@ -71,6 +71,9 @@ public class playerController2 : MonoBehaviour
     public fillingMeterScript doubleJumpMeter;
     public fillingMeterScript speedBoostMeter;
 
+    ParticleSystem doubleJumpParticles;
+    ParticleSystem speedBoostParticles;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -107,7 +110,14 @@ public class playerController2 : MonoBehaviour
 
         distanceToGround = coll.bounds.extents.y - 1.25f;
 
-        punchParticles = GetComponentInChildren<ParticleSystem>();
+        punchParticles = GetComponentsInChildren<ParticleSystem>()[0];
+
+        doubleJumpParticles = GetComponentsInChildren<ParticleSystem>()[1];
+        doubleJumpParticles.gameObject.SetActive(false);
+
+        speedBoostParticles = GetComponentsInChildren<ParticleSystem>()[2];
+        speedBoostParticles.gameObject.SetActive(false);
+
 
         hoverMeter.setMaxValue(hoverTimeSeconds);
 
@@ -216,7 +226,7 @@ public class playerController2 : MonoBehaviour
                 rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
                 animator.SetBool("isFalling", false);
                 hoverMeter.setValue(hoverTimeSeconds);
-                hoverMeter.despawnBackground();
+                //hoverMeter.despawnBackground();
             }
             else
             {
@@ -258,6 +268,11 @@ public class playerController2 : MonoBehaviour
             hoverMeter.setValue(Time.time - hoverStartTime);
           
         }
+        else
+        {
+            hoverMeter.despawnBackground();
+            hoverMeter.setValue(5.0f);
+        }
 
         //punch if punch button pressed/player not airborne
         if (isPunching && isGrounded)
@@ -281,6 +296,7 @@ public class playerController2 : MonoBehaviour
         else
         {
             speedBoostMeter.despawnBackground();
+            speedBoostParticles.gameObject.SetActive(false);
         }
 
         if (hasDoubleJump)
@@ -294,6 +310,7 @@ public class playerController2 : MonoBehaviour
         else
         {
             doubleJumpMeter.despawnBackground();
+            doubleJumpParticles.gameObject.SetActive(false);
         }
 
     }
@@ -362,6 +379,7 @@ public class playerController2 : MonoBehaviour
         isSpeedBoosted = true;
         speedBoostStartTime = Time.time;
         speedBoostMeter.spawnBackground();
+        speedBoostParticles.gameObject.SetActive(true);
     }
 
     void pauseGame()
@@ -387,6 +405,7 @@ public class playerController2 : MonoBehaviour
         doubleJumpStartTime = Time.time;
         //doubleJumpMeter.setValue(doubleJumpDuration);
         doubleJumpMeter.spawnBackground();
+        doubleJumpParticles.gameObject.SetActive(true);
     }
 
 }

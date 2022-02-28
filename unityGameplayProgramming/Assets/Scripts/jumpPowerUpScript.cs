@@ -7,15 +7,15 @@ public class jumpPowerUpScript : MonoBehaviour
     GameObject playerRef;
     Collider playerColliderRef;
     playerController2 playerScriptRef;
+    ParticleSystem sparkles;
 
 
     void Awake()
     {
         playerRef = GameObject.FindWithTag("Player");
-        Debug.Log(playerRef);
         playerColliderRef = playerRef.GetComponent<CapsuleCollider>();
         playerScriptRef = playerRef.GetComponent<playerController2>();
-        Debug.Log(playerScriptRef);
+        sparkles = GetComponentInChildren<ParticleSystem>();
     }
 
     void OnTriggerEnter(Collider other)
@@ -23,6 +23,7 @@ public class jumpPowerUpScript : MonoBehaviour
         if (other == playerColliderRef)
         {
             playerScriptRef.doubleJumpPowerUp();
+            Destroy(sparkles);
             Destroy(gameObject);
         }
     }
