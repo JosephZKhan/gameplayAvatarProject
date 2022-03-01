@@ -20,7 +20,7 @@ public class ringMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Rotate(0.0f, 1.0f, 0.0f);
+        transform.Rotate(0.0f, rotationSpeed, 0.0f);
     }
 
     private void OnTriggerEnter(Collider other)

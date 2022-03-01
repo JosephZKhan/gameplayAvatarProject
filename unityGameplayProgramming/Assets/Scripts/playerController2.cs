@@ -70,6 +70,7 @@ public class playerController2 : MonoBehaviour
     public fillingMeterScript hoverMeter;
     public fillingMeterScript doubleJumpMeter;
     public fillingMeterScript speedBoostMeter;
+    public fillingMeterScript superPunchMeter;
 
     ParticleSystem doubleJumpParticles;
     ParticleSystem speedBoostParticles;
@@ -77,6 +78,11 @@ public class playerController2 : MonoBehaviour
     int ringCount = 0;
 
     public ringCounterUI ringUI;
+
+    public bool hasSuperPunch;
+
+    public float superPunchDuration = 5.0f;
+    float superPunchStartTime;
 
     // Start is called before the first frame update
     void Awake()
@@ -128,6 +134,8 @@ public class playerController2 : MonoBehaviour
         doubleJumpMeter.setMaxValue(doubleJumpDuration);
 
         speedBoostMeter.setMaxValue(speedBoostDuration);
+
+        superPunchMeter.setMaxValue(superPunchDuration);
 
         //punchDuration = animator.GetCurrentAnimatorStateInfo(0).length * 0.66f;
 
@@ -317,6 +325,19 @@ public class playerController2 : MonoBehaviour
             doubleJumpParticles.gameObject.SetActive(false);
         }
 
+        if (hasSuperPunch)
+        {
+            if (Time.time - superPunchStartTime >= superPunchDuration)
+            {
+                hasSuperPunch = false;
+            }
+            superPunchMeter.setValue(Time.time - superPunchStartTime);
+        }
+        else
+        {
+            superPunchMeter.despawnBackground();
+        }
+
     }
 
     //first frame of jump
@@ -417,6 +438,13 @@ public class playerController2 : MonoBehaviour
         ringCount++;
         Debug.Log(ringCount);
         ringUI.setCounter(ringCount);
+    }
+
+    public void superPunchPowerUp()
+    {
+        hasSuperPunch = true;
+        superPunchStartTime = Time.time;
+        superPunchMeter.spawnBackground();
     }
 
 }
