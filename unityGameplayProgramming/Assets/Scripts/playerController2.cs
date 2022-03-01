@@ -144,7 +144,6 @@ public class playerController2 : MonoBehaviour
         doubleJumpParticleRate = doubleJumpParticles.emissionRate;
         speedBoostParticleRate = speedBoostParticles.emissionRate;
         superPunchParticleRate = superPunchParticles.emissionRate;
-
     }
 
     private void OnEnable()
@@ -346,7 +345,7 @@ public class playerController2 : MonoBehaviour
             }
             superPunchMeter.setValue(Time.time - superPunchStartTime);
             var emission = superPunchParticles.emission;
-            emission.rateOverTime = superPunchParticleRate * (1 - ((Time.time - doubleJumpStartTime) / doubleJumpDuration));
+            emission.rateOverTime = superPunchParticleRate * (1 - ((Time.time - superPunchStartTime) / superPunchDuration));
 
         }
         else
