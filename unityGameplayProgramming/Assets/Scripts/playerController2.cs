@@ -330,6 +330,7 @@ public class playerController2 : MonoBehaviour
             if (Time.time - superPunchStartTime >= superPunchDuration)
             {
                 hasSuperPunch = false;
+                animator.SetBool("hasSuperPunch", false);
             }
             superPunchMeter.setValue(Time.time - superPunchStartTime);
         }
@@ -436,7 +437,6 @@ public class playerController2 : MonoBehaviour
     public void collectRing()
     {
         ringCount++;
-        Debug.Log(ringCount);
         ringUI.setCounter(ringCount);
     }
 
@@ -445,6 +445,7 @@ public class playerController2 : MonoBehaviour
         hasSuperPunch = true;
         superPunchStartTime = Time.time;
         superPunchMeter.spawnBackground();
+        animator.SetBool("hasSuperPunch", true);
     }
 
 }
