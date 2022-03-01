@@ -74,6 +74,10 @@ public class playerController2 : MonoBehaviour
     ParticleSystem doubleJumpParticles;
     ParticleSystem speedBoostParticles;
 
+    int ringCount = 0;
+
+    public ringCounterUI ringUI;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -406,6 +410,13 @@ public class playerController2 : MonoBehaviour
         //doubleJumpMeter.setValue(doubleJumpDuration);
         doubleJumpMeter.spawnBackground();
         doubleJumpParticles.gameObject.SetActive(true);
+    }
+
+    public void collectRing()
+    {
+        ringCount++;
+        Debug.Log(ringCount);
+        ringUI.setCounter(ringCount);
     }
 
 }
