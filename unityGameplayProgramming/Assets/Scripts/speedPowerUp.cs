@@ -9,14 +9,11 @@ public class speedPowerUp : MonoBehaviour
     Collider playerColliderRef;
     playerController2 playerScriptRef;
 
-
     void Awake()
     {
         playerRef = GameObject.FindWithTag("Player");
-        Debug.Log(playerRef);
         playerColliderRef = playerRef.GetComponent<CapsuleCollider>();
         playerScriptRef = playerRef.GetComponent<playerController2>();
-        Debug.Log(playerScriptRef);
     }
 
     void OnTriggerEnter(Collider other)
@@ -24,7 +21,15 @@ public class speedPowerUp : MonoBehaviour
         if (other == playerColliderRef)
         {
             playerScriptRef.speedPowerUp();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
+
+    IEnumerator respawn()
+    {
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(5.0f);
+        Debug.Log("hello");
+    }
+
 }
