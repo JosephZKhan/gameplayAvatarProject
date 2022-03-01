@@ -59,7 +59,6 @@ public class playerController2 : MonoBehaviour
     public static bool gamePaused;
     bool pauseButtonPressed;
 
-    ParticleSystem punchParticles;
 
     int jumpsLeft = 1;
 
@@ -67,13 +66,15 @@ public class playerController2 : MonoBehaviour
     public float doubleJumpDuration = 5.0f;
     float doubleJumpStartTime;
 
-    public fillingMeterScript hoverMeter;
-    public fillingMeterScript doubleJumpMeter;
-    public fillingMeterScript speedBoostMeter;
-    public fillingMeterScript superPunchMeter;
+    [SerializeField] fillingMeterScript hoverMeter;
+    [SerializeField] fillingMeterScript doubleJumpMeter;
+    [SerializeField] fillingMeterScript speedBoostMeter;
+    [SerializeField] fillingMeterScript superPunchMeter;
 
-    ParticleSystem doubleJumpParticles;
-    ParticleSystem speedBoostParticles;
+    [SerializeField] ParticleSystem punchParticles;
+    [SerializeField] ParticleSystem doubleJumpParticles;
+    [SerializeField] ParticleSystem speedBoostParticles;
+    [SerializeField] ParticleSystem superPunchParticles;
 
     int ringCount = 0;
 
@@ -83,6 +84,10 @@ public class playerController2 : MonoBehaviour
 
     public float superPunchDuration = 5.0f;
     float superPunchStartTime;
+
+    float doubleJumpParticleRate;
+    float speedBoostParticleRate;
+    float superPunchParticleRate;
 
     // Start is called before the first frame update
     void Awake()
@@ -120,13 +125,12 @@ public class playerController2 : MonoBehaviour
 
         distanceToGround = coll.bounds.extents.y - 1.25f;
 
-        punchParticles = GetComponentsInChildren<ParticleSystem>()[0];
 
-        doubleJumpParticles = GetComponentsInChildren<ParticleSystem>()[1];
         doubleJumpParticles.gameObject.SetActive(false);
 
-        speedBoostParticles = GetComponentsInChildren<ParticleSystem>()[2];
         speedBoostParticles.gameObject.SetActive(false);
+
+        superPunchParticles.gameObject.SetActive(false);
 
 
         hoverMeter.setMaxValue(hoverTimeSeconds);
@@ -137,9 +141,9 @@ public class playerController2 : MonoBehaviour
 
         superPunchMeter.setMaxValue(superPunchDuration);
 
-        //punchDuration = animator.GetCurrentAnimatorStateInfo(0).length * 0.66f;
-
-        
+        doubleJumpParticleRate = doubleJumpParticles.emissionRate;
+        speedBoostParticleRate = speedBoostParticles.emissionRate;
+        superPunchParticleRate = superPunchParticles.emissionRate;
 
     }
 
@@ -304,11 +308,15 @@ public class playerController2 : MonoBehaviour
                 animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
             }
             speedBoostMeter.setValue(Time.time - speedBoostStartTime);
+            var emission = speedBoostParticles.emission;
+            emission.rateOverTime = speedBoostParticleRate * (1 - ((Time.time - speedBoostStartTime) / speedBoostDuration));
         }
         else
         {
             speedBoostMeter.despawnBackground();
             speedBoostParticles.gameObject.SetActive(false);
+            var emission = speedBoostParticles.emission;
+            emission.rateOverTime = speedBoostParticleRate;
         }
 
         if (hasDoubleJump)
@@ -318,11 +326,15 @@ public class playerController2 : MonoBehaviour
                 hasDoubleJump = false;
             }
             doubleJumpMeter.setValue(Time.time - doubleJumpStartTime);
+            var emission = doubleJumpParticles.emission;
+            emission.rateOverTime = doubleJumpParticleRate * (1 - ((Time.time - doubleJumpStartTime) / doubleJumpDuration));
         }
         else
         {
             doubleJumpMeter.despawnBackground();
             doubleJumpParticles.gameObject.SetActive(false);
+            var emission = doubleJumpParticles.emission;
+            emission.rateOverTime = doubleJumpParticleRate;
         }
 
         if (hasSuperPunch)
@@ -333,10 +345,16 @@ public class playerController2 : MonoBehaviour
                 animator.SetBool("hasSuperPunch", false);
             }
             superPunchMeter.setValue(Time.time - superPunchStartTime);
+            var emission = superPunchParticles.emission;
+            emission.rateOverTime = superPunchParticleRate * (1 - ((Time.time - doubleJumpStartTime) / doubleJumpDuration));
+
         }
         else
         {
             superPunchMeter.despawnBackground();
+            superPunchParticles.gameObject.SetActive(false);
+            var emission = superPunchParticles.emission;
+            emission.rateOverTime = superPunchParticleRate;
         }
 
     }
@@ -446,6 +464,7 @@ public class playerController2 : MonoBehaviour
         superPunchStartTime = Time.time;
         superPunchMeter.spawnBackground();
         animator.SetBool("hasSuperPunch", true);
+        superPunchParticles.gameObject.SetActive(true);
     }
 
 }

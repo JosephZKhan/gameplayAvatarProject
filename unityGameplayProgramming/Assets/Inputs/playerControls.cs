@@ -480,7 +480,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""201e0efc-5863-42cf-891a-0f69c7ea27a3"",
-                    ""path"": ""<Keyboard>/x"",
+                    ""path"": ""<Keyboard>/p"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
