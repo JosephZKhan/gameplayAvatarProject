@@ -78,7 +78,7 @@ public class playerController2 : MonoBehaviour
 
     int ringCount = 0;
 
-    public ringCounterUI ringUI;
+    [SerializeField] ringCounterUI ringUI;
 
     public bool hasSuperPunch;
 
@@ -342,6 +342,7 @@ public class playerController2 : MonoBehaviour
             {
                 hasSuperPunch = false;
                 animator.SetBool("hasSuperPunch", false);
+                punchParticles.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             }
             superPunchMeter.setValue(Time.time - superPunchStartTime);
             var emission = superPunchParticles.emission;
@@ -464,6 +465,7 @@ public class playerController2 : MonoBehaviour
         superPunchMeter.spawnBackground();
         animator.SetBool("hasSuperPunch", true);
         superPunchParticles.gameObject.SetActive(true);
+        punchParticles.transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
     }
 
 }

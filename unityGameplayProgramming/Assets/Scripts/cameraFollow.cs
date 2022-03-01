@@ -8,7 +8,7 @@ public class cameraFollow : MonoBehaviour
     public Transform target;
 
     public float smoothSpeed = 0.125f;
-    public Vector3 offset;
+    public Vector3 offset = new Vector3 (0.0f, 3.44f, -6.89f);
 
     // Update is called once per frame
     void FixedUpdate()
