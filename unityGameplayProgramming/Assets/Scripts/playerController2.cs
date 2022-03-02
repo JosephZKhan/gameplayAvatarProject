@@ -89,6 +89,8 @@ public class playerController2 : MonoBehaviour
     float speedBoostParticleRate;
     float superPunchParticleRate;
 
+    bool inSwitchCollider = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -292,7 +294,14 @@ public class playerController2 : MonoBehaviour
         //punch if punch button pressed/player not airborne
         if (isPunching && isGrounded)
         {
-            startPunch();
+            if (inSwitchCollider)
+            {
+                pressSwitch();
+            }
+            else
+            {
+                startPunch();
+            }
         }
 
         if (isSpeedBoosted)
@@ -466,6 +475,17 @@ public class playerController2 : MonoBehaviour
         animator.SetBool("hasSuperPunch", true);
         superPunchParticles.gameObject.SetActive(true);
         punchParticles.transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
+    }
+
+    public void setInSwitchCollider(bool newInSwitchCollider)
+    {
+        inSwitchCollider = newInSwitchCollider;
+    }
+
+    void pressSwitch()
+    {
+        Debug.Log("bababooey");
+        isPunching = false;
     }
 
 }
