@@ -90,6 +90,7 @@ public class playerController2 : MonoBehaviour
     float superPunchParticleRate;
 
     bool inSwitchCollider = false;
+    switchBehaviour targetSwitch;
 
     // Start is called before the first frame update
     void Awake()
@@ -482,9 +483,17 @@ public class playerController2 : MonoBehaviour
         inSwitchCollider = newInSwitchCollider;
     }
 
+    public void setTargetSwitch(switchBehaviour newTargetSwitch)
+    {
+        targetSwitch = newTargetSwitch;
+        Debug.Log(targetSwitch);
+    }
+
     void pressSwitch()
     {
         Debug.Log("bababooey");
+        targetSwitch.Activate();
+
         isPunching = false;
     }
 

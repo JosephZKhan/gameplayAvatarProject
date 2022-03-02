@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
-public class switchPlayerDetection : MonoBehaviour
+public class switchBehaviour : MonoBehaviour
 {
 
     [SerializeField] Collider playerColl;
     [SerializeField] playerController2 playerScriptRef;
+    [SerializeField] PlayableDirector cutscene;
+
 
 
 
@@ -15,6 +18,7 @@ public class switchPlayerDetection : MonoBehaviour
         if (other == playerColl)
         {
             playerScriptRef.setInSwitchCollider(true);
+            playerScriptRef.setTargetSwitch(this);
         }
     }
 
@@ -24,5 +28,10 @@ public class switchPlayerDetection : MonoBehaviour
         {
             playerScriptRef.setInSwitchCollider(false);
         }
+    }
+
+    public void Activate()
+    {
+        cutscene.Play();
     }
 }
