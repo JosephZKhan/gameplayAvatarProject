@@ -10,6 +10,13 @@ public class switchBehaviour : MonoBehaviour
     [SerializeField] playerController2 playerScriptRef;
     [SerializeField] PlayableDirector cutscene;
 
+    Light spotlight;
+
+    void Awake()
+    {
+        spotlight = gameObject.transform.GetChild(2).gameObject.GetComponent<Light>();
+    }
+
 
 
 
@@ -19,6 +26,8 @@ public class switchBehaviour : MonoBehaviour
         {
             playerScriptRef.setInSwitchCollider(true);
             playerScriptRef.setTargetSwitch(this);
+
+            spotlight.enabled = true;
         }
     }
 
@@ -27,6 +36,8 @@ public class switchBehaviour : MonoBehaviour
         if (other == playerColl)
         {
             playerScriptRef.setInSwitchCollider(false);
+
+            spotlight.enabled = false;
         }
     }
 
