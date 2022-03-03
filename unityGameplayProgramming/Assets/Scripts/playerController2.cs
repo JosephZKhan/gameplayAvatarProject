@@ -47,6 +47,7 @@ public class playerController2 : MonoBehaviour
 
     bool freezeWalking;
     bool freezeJumping;
+    bool freezePunching;
 
     bool isSpeedBoosted;
     public float speedBoostMagnitude = 2.0f;
@@ -301,7 +302,10 @@ public class playerController2 : MonoBehaviour
             }
             else
             {
-                startPunch();
+                if (!freezePunching)
+                {
+                    startPunch();
+                }
             }
         }
 
@@ -491,10 +495,23 @@ public class playerController2 : MonoBehaviour
 
     void pressSwitch()
     {
-        Debug.Log("bababooey");
         targetSwitch.Activate();
 
         isPunching = false;
+    }
+
+    public void freezePlayer()
+    {
+        freezeJumping = true;
+        freezeWalking = true;
+        freezePunching = true;
+    }
+
+    public void unfreezePlayer()
+    {
+        freezeJumping = false;
+        freezeWalking = false;
+        freezePunching = false;
     }
 
 }
