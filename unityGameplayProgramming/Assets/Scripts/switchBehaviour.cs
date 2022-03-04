@@ -12,6 +12,10 @@ public class switchBehaviour : MonoBehaviour
 
     Light spotlight;
 
+    bool isTriggered = false;
+
+
+
     void Awake()
     {
         spotlight = gameObject.transform.GetChild(2).gameObject.GetComponent<Light>();
@@ -27,7 +31,10 @@ public class switchBehaviour : MonoBehaviour
             playerScriptRef.setInSwitchCollider(true);
             playerScriptRef.setTargetSwitch(this);
 
-            spotlight.enabled = true;
+            if (!isTriggered)
+            {
+                spotlight.enabled = true;
+            }
         }
     }
 
@@ -43,6 +50,10 @@ public class switchBehaviour : MonoBehaviour
 
     public void Activate()
     {
-        cutscene.Play();
+        if (!isTriggered)
+        {
+            cutscene.Play();
+            isTriggered = true;
+        }
     }
 }
