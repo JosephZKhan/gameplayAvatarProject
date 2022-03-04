@@ -9,16 +9,23 @@ public class switchBehaviour : MonoBehaviour
     [SerializeField] Collider playerColl;
     [SerializeField] playerController2 playerScriptRef;
     [SerializeField] PlayableDirector cutscene;
+    [SerializeField] PlayableDirector resetCutscene;
 
     Light spotlight;
+    //GameObject button;
 
     bool isTriggered = false;
+
+    public bool hasReset = false;
+    public float timeUntilReset = 10.0f;
 
 
 
     void Awake()
     {
         spotlight = gameObject.transform.GetChild(2).gameObject.GetComponent<Light>();
+        //button = gameObject.transform.GetChild(0).gameObject;
+
     }
 
 
@@ -54,6 +61,22 @@ public class switchBehaviour : MonoBehaviour
         {
             cutscene.Play();
             isTriggered = true;
+            if (hasReset)
+            {
+                StartCoroutine(reset());
+            }
         }
+    }
+
+    IEnumerator reset()
+    {
+        yield return new WaitForSeconds(timeUntilReset);
+        if (hasReset)
+        {
+            Debug.Log("reset!");
+            resetCutscene.Play();
+            isTriggered = false;
+        }
+        
     }
 }
