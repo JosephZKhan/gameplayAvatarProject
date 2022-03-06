@@ -93,6 +93,8 @@ public class playerController2 : MonoBehaviour
     bool inSwitchCollider = false;
     switchBehaviour targetSwitch;
 
+    [SerializeField] Transform cameraTransform;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -129,13 +131,11 @@ public class playerController2 : MonoBehaviour
 
         distanceToGround = coll.bounds.extents.y - 1.25f;
 
-
         doubleJumpParticles.gameObject.SetActive(false);
 
         speedBoostParticles.gameObject.SetActive(false);
 
         superPunchParticles.gameObject.SetActive(false);
-
 
         hoverMeter.setMaxValue(hoverTimeSeconds);
 
@@ -190,19 +190,18 @@ public class playerController2 : MonoBehaviour
             }
 
             //update movement
-            Vector3 movement = new Vector3(move.x, 0.0f, move.y) * speed * Time.deltaTime;
+            //Vector3 movement = new Vector3(move.x, 0f, move.y) * speed * Time.deltaTime;
+            Vector3 movement = transform.forward * speed * Time.deltaTime;
             rb.AddForce(movement, ForceMode.VelocityChange);
 
             //normalize movement for rotation
             Vector2 moveDirection = move.normalized;
 
-            
-
             //if the user moves player
             if (moveDirection != Vector2.zero)
             {
                 //rotate the player to face forwards
-                float targetRotation = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg;
+                float targetRotation = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
                 transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, turnSmoothTime);
             }
 
