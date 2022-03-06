@@ -33,6 +33,14 @@ public class @CameraControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Centre"",
+                    ""type"": ""Button"",
+                    ""id"": ""04180dcb-62ef-49ce-8d5d-b0ffd488e3c8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -145,6 +153,28 @@ public class @CameraControls : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2d2bcce7-a483-4302-b774-679ed3427dc1"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Centre"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b67d5ee8-2b5d-4b13-9be4-e4035ed1e492"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Centre"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -166,6 +196,7 @@ public class @CameraControls : IInputActionCollection, IDisposable
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Keys = m_Camera.FindAction("Keys", throwIfNotFound: true);
         m_Camera_Move = m_Camera.FindAction("Move", throwIfNotFound: true);
+        m_Camera_Centre = m_Camera.FindAction("Centre", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -217,12 +248,14 @@ public class @CameraControls : IInputActionCollection, IDisposable
     private ICameraActions m_CameraActionsCallbackInterface;
     private readonly InputAction m_Camera_Keys;
     private readonly InputAction m_Camera_Move;
+    private readonly InputAction m_Camera_Centre;
     public struct CameraActions
     {
         private @CameraControls m_Wrapper;
         public CameraActions(@CameraControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Keys => m_Wrapper.m_Camera_Keys;
         public InputAction @Move => m_Wrapper.m_Camera_Move;
+        public InputAction @Centre => m_Wrapper.m_Camera_Centre;
         public InputActionMap Get() { return m_Wrapper.m_Camera; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -238,6 +271,9 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnMove;
+                @Centre.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnCentre;
+                @Centre.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnCentre;
+                @Centre.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnCentre;
             }
             m_Wrapper.m_CameraActionsCallbackInterface = instance;
             if (instance != null)
@@ -248,6 +284,9 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Centre.started += instance.OnCentre;
+                @Centre.performed += instance.OnCentre;
+                @Centre.canceled += instance.OnCentre;
             }
         }
     }
@@ -274,5 +313,6 @@ public class @CameraControls : IInputActionCollection, IDisposable
     {
         void OnKeys(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnCentre(InputAction.CallbackContext context);
     }
 }

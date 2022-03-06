@@ -29,6 +29,8 @@ public class controlCamera : MonoBehaviour
 
         controls.Camera.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Camera.Move.canceled += ctx => move = Vector2.zero;
+
+        controls.Camera.Centre.performed += ctx => centreCamera();
     }
 
     private void OnEnable()
@@ -59,6 +61,13 @@ public class controlCamera : MonoBehaviour
         transform.eulerAngles = currentRotation;
 
         transform.position = target.position - transform.forward * targetDistance;
+    }
+
+    void centreCamera()
+    {
+        transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+        transform.position = target.position - transform.forward * targetDistance;
+        Debug.Log("bababooey");
     }
 
 }
