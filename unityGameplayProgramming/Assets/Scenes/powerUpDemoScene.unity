@@ -8057,6 +8057,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 320809823}
     - target: {fileID: 4428321842127708086, guid: 8a1575d1af970b941b291df348e096d7, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 1209868713}
+    - target: {fileID: 4428321842127708086, guid: 8a1575d1af970b941b291df348e096d7, type: 3}
       propertyPath: doubleJumpMeter
       value: 
       objectReference: {fileID: 2016850397}

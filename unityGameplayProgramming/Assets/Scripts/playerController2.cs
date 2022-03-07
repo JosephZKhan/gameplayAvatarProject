@@ -489,7 +489,6 @@ public class playerController2 : MonoBehaviour
     public void setTargetSwitch(switchBehaviour newTargetSwitch)
     {
         targetSwitch = newTargetSwitch;
-        Debug.Log(targetSwitch);
     }
 
     void pressSwitch()

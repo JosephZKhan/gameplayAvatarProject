@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.UI;
 
 public class switchBehaviour : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class switchBehaviour : MonoBehaviour
     [SerializeField] playerController2 playerScriptRef;
     [SerializeField] PlayableDirector cutscene;
     [SerializeField] PlayableDirector resetCutscene;
+    [SerializeField] Text resetTimerText;
 
     Light spotlight;
     //GameObject button;
@@ -17,8 +19,7 @@ public class switchBehaviour : MonoBehaviour
     bool isTriggered = false;
 
     public bool hasReset = false;
-    public float timeUntilReset = 10.0f;
-
+    public int timeUntilReset = 10;
 
 
     void Awake()
@@ -63,17 +64,20 @@ public class switchBehaviour : MonoBehaviour
             isTriggered = true;
             if (hasReset)
             {
-                StartCoroutine(reset());
+                StartCoroutine(reset(timeUntilReset));
             }
         }
     }
 
-    IEnumerator reset()
+    IEnumerator reset(int timeRemaining)
     {
-        yield return new WaitForSeconds(timeUntilReset);
+        for (int i = timeRemaining; i > 0; i--)
+        {
+            resetTimerText.text = i.ToString("00");
+            yield return new WaitForSeconds(1);
+        }
         if (hasReset)
         {
-            Debug.Log("reset!");
             resetCutscene.Play();
             isTriggered = false;
         }

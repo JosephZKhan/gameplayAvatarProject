@@ -646,7 +646,7 @@ MonoBehaviour:
   isInverted: 0
   target: {fileID: 1431458023}
   targetDistance: 5
-  smoothTime: 0.12
+  smoothTime: 0.07
 --- !u!1 &516948306
 GameObject:
   m_ObjectHideFlags: 0

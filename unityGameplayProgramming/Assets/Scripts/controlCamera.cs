@@ -16,7 +16,7 @@ public class controlCamera : MonoBehaviour
 
     [SerializeField] Transform target;
     public float targetDistance = 5;
-    Vector2 pitchLimits = new Vector2(-30, 60);
+    Vector2 pitchLimits = new Vector2(-20, 55);
 
     public float smoothTime = .12f;
     Vector3 smoothVelocity;
