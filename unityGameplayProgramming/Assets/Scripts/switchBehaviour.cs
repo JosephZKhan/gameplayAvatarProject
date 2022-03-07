@@ -12,6 +12,7 @@ public class switchBehaviour : MonoBehaviour
     [SerializeField] PlayableDirector cutscene;
     [SerializeField] PlayableDirector resetCutscene;
     [SerializeField] Text resetTimerText;
+    [SerializeField] GameObject powerup;
 
     Light spotlight;
     //GameObject button;
@@ -21,12 +22,30 @@ public class switchBehaviour : MonoBehaviour
     public bool hasReset = false;
     public int timeUntilReset = 10;
 
+    public bool powerupSpawner = false;
+
 
     void Awake()
     {
         spotlight = gameObject.transform.GetChild(2).gameObject.GetComponent<Light>();
         //button = gameObject.transform.GetChild(0).gameObject;
 
+    }
+
+    void Update()
+    {
+        if (powerupSpawner)
+        {
+            if (cutscene.state != PlayState.Playing)
+            {
+                if (isTriggered && !powerup.active)
+                {
+                    Debug.Log("bababooey");
+                    resetCutscene.Play();
+                    isTriggered = false;
+                }
+            }
+        }
     }
 
 

@@ -227,7 +227,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: Unarmed-Attack-R2
+    m_DisplayName: Unarmed-Attack-R2 1
   m_Markers:
     m_Objects: []
   m_InfiniteClipPreExtrapolation: 0
@@ -1787,7 +1787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030f85c3f73729f4f976f66ffb23b875, type: 3}
   m_Name: AnimationPlayableAsset(Clone)(Clone)
   m_EditorClassIdentifier: 
-  m_Clip: {fileID: 7400000, guid: 87728010d793bd146b5feb10456c97b0, type: 2}
+  m_Clip: {fileID: 7400000, guid: c6510f4b99322bb409e2a989d0ed3d1d, type: 2}
   m_Position: {x: 16.839197, y: 3.07, z: 17.038126}
   m_EulerAngles: {x: 0, y: 0, z: 0}
   m_UseTrackMatchFields: 1

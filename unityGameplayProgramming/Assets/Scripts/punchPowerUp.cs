@@ -25,7 +25,8 @@ public class punchPowerUp : MonoBehaviour
             //playerScriptRef.doubleJumpPowerUp();
             //Destroy(sparkles);
             playerScriptRef.superPunchPowerUp();
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

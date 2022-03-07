@@ -24,7 +24,7 @@ public class jumpPowerUpScript : MonoBehaviour
         {
             playerScriptRef.doubleJumpPowerUp();
             Destroy(sparkles);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }
