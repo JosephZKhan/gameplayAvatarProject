@@ -8,11 +8,12 @@ TagManager:
   - Collide
   - Ground
   - Punchable
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Lock-on Target
   - Water
   - UI
   - 

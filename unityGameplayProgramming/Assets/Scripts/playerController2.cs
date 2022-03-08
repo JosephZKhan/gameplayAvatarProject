@@ -95,6 +95,14 @@ public class playerController2 : MonoBehaviour
 
     [SerializeField] Transform cameraTransform;
 
+    bool canLockOn = false;
+    GameObject lockOnTarget;
+
+    bool lockOnButtonPressed = false;
+    bool isLockedOn = false;
+
+
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -118,7 +126,10 @@ public class playerController2 : MonoBehaviour
 
         controls.Player.Pause.started += ctx => pauseButtonPressed = true;
         controls.Player.Pause.canceled += ctx => pauseButtonPressed = false;
- 
+
+        controls.Player.LockOn.started += ctx => lockOnButtonPressed = true;
+        controls.Player.LockOn.canceled += ctx => lockOnButtonPressed = false;
+
         animator = GetComponent<Animator>();
 
         rb = GetComponent<Rigidbody>();
@@ -192,6 +203,23 @@ public class playerController2 : MonoBehaviour
             //update movement
             //Vector3 movement = new Vector3(move.x, 0f, move.y) * speed * Time.deltaTime;
             Vector3 movement = transform.forward * speed * Time.deltaTime;
+
+            if (isLockedOn)
+            {
+                if (move.y < 0)
+                {
+                    movement = -transform.forward * speed * Time.deltaTime;
+                }
+                if (move.x > 0)
+                {
+                    movement = transform.right * speed * Time.deltaTime;
+                }
+                if (move.x < 0)
+                {
+                    movement = -transform.right * speed * Time.deltaTime;
+                }
+            }
+
             rb.AddForce(movement, ForceMode.VelocityChange);
 
             //normalize movement for rotation
@@ -235,7 +263,7 @@ public class playerController2 : MonoBehaviour
             Jump();
         }
 
-        
+
 
         if (rb.velocity.y < 0)
         {
@@ -280,11 +308,11 @@ public class playerController2 : MonoBehaviour
             if (Time.time - hoverStartTime >= hoverTimeSeconds)
             {
                 isHovering = false;
-                
+
             }
 
             hoverMeter.setValue(Time.time - hoverStartTime);
-          
+
         }
         else
         {
@@ -314,7 +342,7 @@ public class playerController2 : MonoBehaviour
             {
                 isSpeedBoosted = false;
                 isRunning = false;
-                
+
                 //update blend tree to determing walking/running animation
                 float animationSpeedPercent = ((isRunning) ? 1 : 0.5f) * move.magnitude;
                 animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
@@ -368,6 +396,18 @@ public class playerController2 : MonoBehaviour
             superPunchParticles.gameObject.SetActive(false);
             var emission = superPunchParticles.emission;
             emission.rateOverTime = superPunchParticleRate;
+        }
+
+        if (lockOnButtonPressed)
+        {
+            if (canLockOn && lockOnTarget != null)
+            {
+                lockOn();
+            }
+        }
+        else
+        {
+            isLockedOn = false;
         }
 
     }
@@ -510,6 +550,28 @@ public class playerController2 : MonoBehaviour
         freezeJumping = false;
         freezeWalking = false;
         freezePunching = false;
+    }
+
+    public void assignLockOnTarget(GameObject newLockOnTarget)
+    {
+        lockOnTarget = newLockOnTarget;
+        canLockOn = true;
+    }
+
+    public void disableLockOn()
+    {
+        canLockOn = false;
+    }
+
+    void lockOn()
+    {
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+
+        Vector3 adjustedPos = lockOnTarget.transform.position;
+        adjustedPos.y = transform.position.y;
+        transform.LookAt(adjustedPos);
+        isLockedOn = true;
+        //transform.rotation.SetEulerAngles(new Vector3(0.0f, transform.rotation.y, 0.0f));
     }
 
 }

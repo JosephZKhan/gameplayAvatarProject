@@ -75,17 +75,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""cameraControl"",
-                    ""type"": ""Value"",
-                    ""id"": ""03a6b683-c604-436c-87ea-fc96ff0bf9dc"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""4b2ae9e8-7bef-4c3e-b76a-517c40640188"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Pause"",
+                    ""name"": ""LockOn"",
                     ""type"": ""Button"",
-                    ""id"": ""4b2ae9e8-7bef-4c3e-b76a-517c40640188"",
+                    ""id"": ""e9275541-81b6-4ac7-b006-877104875a74"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -413,17 +413,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""dc1d56a0-80cc-4a05-9c47-9dcb970a754c"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""cameraControl"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""201e0efc-5863-42cf-891a-0f69c7ea27a3"",
                     ""path"": ""<Keyboard>/p"",
                     ""interactions"": """",
@@ -441,6 +430,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b6676deb-40a8-41c7-85e2-30866718d7d0"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""LockOn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -481,8 +481,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_Hover = m_Player.FindAction("Hover", throwIfNotFound: true);
         m_Player_Punch = m_Player.FindAction("Punch", throwIfNotFound: true);
-        m_Player_cameraControl = m_Player.FindAction("cameraControl", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
+        m_Player_LockOn = m_Player.FindAction("LockOn", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -539,8 +539,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_Hover;
     private readonly InputAction m_Player_Punch;
-    private readonly InputAction m_Player_cameraControl;
     private readonly InputAction m_Player_Pause;
+    private readonly InputAction m_Player_LockOn;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -552,8 +552,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @Hover => m_Wrapper.m_Player_Hover;
         public InputAction @Punch => m_Wrapper.m_Player_Punch;
-        public InputAction @cameraControl => m_Wrapper.m_Player_cameraControl;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
+        public InputAction @LockOn => m_Wrapper.m_Player_LockOn;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -584,12 +584,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Punch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPunch;
                 @Punch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPunch;
                 @Punch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPunch;
-                @cameraControl.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraControl;
-                @cameraControl.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraControl;
-                @cameraControl.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraControl;
                 @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @LockOn.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLockOn;
+                @LockOn.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLockOn;
+                @LockOn.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLockOn;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -615,12 +615,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Punch.started += instance.OnPunch;
                 @Punch.performed += instance.OnPunch;
                 @Punch.canceled += instance.OnPunch;
-                @cameraControl.started += instance.OnCameraControl;
-                @cameraControl.performed += instance.OnCameraControl;
-                @cameraControl.canceled += instance.OnCameraControl;
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @LockOn.started += instance.OnLockOn;
+                @LockOn.performed += instance.OnLockOn;
+                @LockOn.canceled += instance.OnLockOn;
             }
         }
     }
@@ -652,7 +652,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnHover(InputAction.CallbackContext context);
         void OnPunch(InputAction.CallbackContext context);
-        void OnCameraControl(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnLockOn(InputAction.CallbackContext context);
     }
 }

@@ -62,17 +62,17 @@
                     "interactions": ""
                 },
                 {
-                    "name": "cameraControl",
-                    "type": "Value",
-                    "id": "03a6b683-c604-436c-87ea-fc96ff0bf9dc",
-                    "expectedControlType": "Vector2",
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "4b2ae9e8-7bef-4c3e-b76a-517c40640188",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
                 {
-                    "name": "Pause",
+                    "name": "LockOn",
                     "type": "Button",
-                    "id": "4b2ae9e8-7bef-4c3e-b76a-517c40640188",
+                    "id": "e9275541-81b6-4ac7-b006-877104875a74",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -400,17 +400,6 @@
                 },
                 {
                     "name": "",
-                    "id": "dc1d56a0-80cc-4a05-9c47-9dcb970a754c",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "cameraControl",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "201e0efc-5863-42cf-891a-0f69c7ea27a3",
                     "path": "<Keyboard>/p",
                     "interactions": "",
@@ -428,6 +417,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b6676deb-40a8-41c7-85e2-30866718d7d0",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "LockOn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
