@@ -7709,6 +7709,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 647411794}
     - target: {fileID: 2902568418238380081, guid: 37169f610cc92804aaabddd0e63ce6eb, type: 3}
+      propertyPath: timeUntilReset
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 2902568418238380081, guid: 37169f610cc92804aaabddd0e63ce6eb, type: 3}
       propertyPath: playerScriptRef
       value: 
       objectReference: {fileID: 2120461247}
