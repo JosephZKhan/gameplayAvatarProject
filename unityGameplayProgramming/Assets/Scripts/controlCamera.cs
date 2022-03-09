@@ -39,7 +39,7 @@ public class controlCamera : MonoBehaviour
         //controls.Camera.Move.performed += ctx => centreCameraButtonPressed = false;
 
         controls.Camera.Centre.started += ctx => centreCameraSetup(mainTarget);
-        controls.Camera.Centre.performed += ctx => centreCamera = true;
+        //controls.Camera.Centre.performed += ctx => centreCamera = true;
         controls.Camera.Centre.canceled += ctx => centreCamera = false;
     }
 
@@ -112,6 +112,7 @@ public class controlCamera : MonoBehaviour
 
         transform.position = centreTarget.position - centreTarget.transform.forward * targetDistance;
         transform.LookAt(centreTarget);
+        centreCamera = true;
         
     }
 
