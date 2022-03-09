@@ -11,6 +11,7 @@ public class playerController2 : MonoBehaviour
 
     public float walkSpeed = 10;
     public float runSpeed = 20;
+    public float strafeSpeed = 8;
 
     public float turnSmoothTime = 0.2f;
     float turnSmoothVelocity;
@@ -212,11 +213,11 @@ public class playerController2 : MonoBehaviour
                 }
                 if (move.x > 0)
                 {
-                    movement = transform.right * speed * Time.deltaTime;
+                    movement = transform.right * strafeSpeed * Time.deltaTime;
                 }
                 if (move.x < 0)
                 {
-                    movement = -transform.right * speed * Time.deltaTime;
+                    movement = -transform.right * strafeSpeed * Time.deltaTime;
                 }
             }
 

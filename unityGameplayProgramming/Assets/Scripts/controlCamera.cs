@@ -14,7 +14,7 @@ public class controlCamera : MonoBehaviour
     public float sensitivity = 10;
     public bool isInverted = false;
 
-    [SerializeField] Transform target;
+    [SerializeField] Transform mainTarget;
     public float targetDistance = 5;
     Vector2 pitchLimits = new Vector2(-20, 55);
 
@@ -28,7 +28,7 @@ public class controlCamera : MonoBehaviour
     Vector3 centreVelocity;
 
     bool centreCameraButtonPressed = false;
-
+    bool centreCamera = false;
 
     void Awake()
     {
@@ -36,11 +36,11 @@ public class controlCamera : MonoBehaviour
 
         controls.Camera.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Camera.Move.canceled += ctx => move = Vector2.zero;
-        controls.Camera.Move.performed += ctx => centreCameraButtonPressed = false;
+        //controls.Camera.Move.performed += ctx => centreCameraButtonPressed = false;
 
-        controls.Camera.Centre.started += ctx => centreCameraButtonPressed = true;
-        controls.Camera.Centre.performed += ctx => centreCameraButtonPressed = true;
-        //controls.Camera.Centre.canceled += ctx => centreCameraButtonPressed = false;
+        controls.Camera.Centre.started += ctx => centreCameraSetup(mainTarget);
+        controls.Camera.Centre.performed += ctx => centreCamera = true;
+        controls.Camera.Centre.canceled += ctx => centreCamera = false;
     }
 
     private void OnEnable()
@@ -55,25 +55,33 @@ public class controlCamera : MonoBehaviour
 
     void LateUpdate()
     {
-        yaw += move.x * sensitivity;
-        if (isInverted)
+        if (!centreCamera)
         {
-            pitch += move.y * sensitivity;
+            yaw += move.x * sensitivity;
+            if (isInverted)
+            {
+                pitch += move.y * sensitivity;
+            }
+            else
+            {
+                pitch -= move.y * sensitivity;
+            }
+            pitch = Mathf.Clamp(pitch, pitchLimits.x, pitchLimits.y);
+            currentRotation = Vector3.SmoothDamp(currentRotation, new Vector3(pitch, yaw), ref smoothVelocity, smoothTime);
+
+            transform.eulerAngles = currentRotation;
+
+            transform.position = mainTarget.position - transform.forward * targetDistance;
         }
         else
         {
-            pitch -= move.y * sensitivity;
+            centreCameraFollow(mainTarget);
         }
-        pitch = Mathf.Clamp(pitch, pitchLimits.x, pitchLimits.y);
 
-        currentRotation = Vector3.SmoothDamp(currentRotation, new Vector3(pitch, yaw), ref smoothVelocity, smoothTime);
-
-        transform.eulerAngles = currentRotation;
-
-        transform.position = target.position - transform.forward * targetDistance;
+        
         //transform.position = target.position - target.transform.forward * targetDistance; you could use this for a pov mode
 
-        if (centreCameraButtonPressed)
+        /*if (centreCameraButtonPressed)
         {
             centreCamera(target);
         }
@@ -94,8 +102,21 @@ public class controlCamera : MonoBehaviour
 
             pitch = 0;
             yaw = 0;
-            currentRotation = new Vector3(0, 0, 0);
-            smoothVelocity = new Vector3(0, 0, 0);
-        }
+            //currentRotation = transform.localRotation;
+            //smoothVelocity = new Vector3(0, 0, 0);
+        }*/
+    }
+
+    void centreCameraSetup(Transform centreTarget)
+    {
+
+        transform.position = centreTarget.position - centreTarget.transform.forward * targetDistance;
+        transform.LookAt(centreTarget);
+        
+    }
+
+    void centreCameraFollow(Transform centreTarget)
+    {
+        transform.position = mainTarget.position - transform.forward * targetDistance;
     }
 }
