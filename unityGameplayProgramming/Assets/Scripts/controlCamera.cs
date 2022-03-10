@@ -112,6 +112,7 @@ public class controlCamera : MonoBehaviour
 
         transform.position = centreTarget.position - centreTarget.transform.forward * targetDistance;
         transform.LookAt(centreTarget);
+        move = Vector2.zero;
         centreCamera = true;
         
     }
