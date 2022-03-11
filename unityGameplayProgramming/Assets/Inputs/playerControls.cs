@@ -89,6 +89,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Freeze"",
+                    ""type"": ""Button"",
+                    ""id"": ""52288b18-afc6-404e-a654-faed8a043871"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -443,6 +451,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""LockOn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3792baa9-3956-4cc0-8447-bae7208aaad4"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""LockOn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4c2c5893-7764-462d-bd2e-2ee6f882422a"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Freeze"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -483,6 +513,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player_Punch = m_Player.FindAction("Punch", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_LockOn = m_Player.FindAction("LockOn", throwIfNotFound: true);
+        m_Player_Freeze = m_Player.FindAction("Freeze", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -541,6 +572,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Punch;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_LockOn;
+    private readonly InputAction m_Player_Freeze;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -554,6 +586,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Punch => m_Wrapper.m_Player_Punch;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @LockOn => m_Wrapper.m_Player_LockOn;
+        public InputAction @Freeze => m_Wrapper.m_Player_Freeze;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -590,6 +623,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @LockOn.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLockOn;
                 @LockOn.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLockOn;
                 @LockOn.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLockOn;
+                @Freeze.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFreeze;
+                @Freeze.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFreeze;
+                @Freeze.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFreeze;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -621,6 +657,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @LockOn.started += instance.OnLockOn;
                 @LockOn.performed += instance.OnLockOn;
                 @LockOn.canceled += instance.OnLockOn;
+                @Freeze.started += instance.OnFreeze;
+                @Freeze.performed += instance.OnFreeze;
+                @Freeze.canceled += instance.OnFreeze;
             }
         }
     }
@@ -654,5 +693,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnPunch(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnLockOn(InputAction.CallbackContext context);
+        void OnFreeze(InputAction.CallbackContext context);
     }
 }

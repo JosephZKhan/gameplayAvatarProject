@@ -8,15 +8,22 @@ public class controlCamera : MonoBehaviour
     CameraControls controls;
     Vector2 move;
 
-    float yaw;
-    float pitch;
+    public float yaw;
+    public float pitch;
 
-    public float sensitivity = 10;
+    public float sensitivity = .75f;
+    public float povSensitivity = .25f;
+
     public bool isInverted = false;
 
     [SerializeField] Transform mainTarget;
+    [SerializeField] Transform povTarget;
+    [SerializeField] playerController2 playerScriptRef;
+
     public float targetDistance = 5;
     Vector2 pitchLimits = new Vector2(-20, 55);
+
+    Vector2 povPitchLimits = new Vector2(-40, 40);
 
     public float smoothTime = .12f;
     Vector3 smoothVelocity;
@@ -24,11 +31,12 @@ public class controlCamera : MonoBehaviour
     Vector3 currentRotation;
     Vector3 currentPosition;
 
-    public float centreTime = .06f;
-    Vector3 centreVelocity;
+    bool freeMovement = true;
+    bool inpov = false;
+    bool inLockOn = false;
 
-    bool centreCameraButtonPressed = false;
-    bool centreCamera = false;
+    GameObject lockOnTarget;
+
 
     void Awake()
     {
@@ -36,11 +44,26 @@ public class controlCamera : MonoBehaviour
 
         controls.Camera.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Camera.Move.canceled += ctx => move = Vector2.zero;
-        //controls.Camera.Move.performed += ctx => centreCameraButtonPressed = false;
 
-        controls.Camera.Centre.started += ctx => centreCameraSetup(mainTarget);
-        //controls.Camera.Centre.performed += ctx => centreCamera = true;
-        controls.Camera.Centre.canceled += ctx => centreCamera = false;
+        controls.Camera.Centre.started += ctx => resetPos(mainTarget);
+
+        controls.Camera.SnapLeft.started += ctx => resetPosLeft(mainTarget);
+
+        controls.Camera.SnapRight.started += ctx => resetPosRight(mainTarget);
+
+        controls.Camera.POV.started += ctx => inpov = true;
+        controls.Camera.POV.started += ctx => freeMovement = false;
+        //controls.Camera.POV.started += ctx => resetPos(povTarget);
+
+        controls.Camera.POV.canceled += ctx => inpov = false;
+        controls.Camera.POV.canceled += ctx => freeMovement = true;
+
+        controls.Camera.LockOn.started += ctx => inLockOn = true;
+        controls.Camera.LockOn.started += ctx => inpov = false;
+        controls.Camera.LockOn.started += ctx => freeMovement = false;
+
+        controls.Camera.LockOn.canceled += ctx => inLockOn = false;
+        controls.Camera.LockOn.canceled += ctx => freeMovement = true;
     }
 
     private void OnEnable()
@@ -55,70 +78,94 @@ public class controlCamera : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!centreCamera)
+        if (inLockOn)
         {
-            yaw += move.x * sensitivity;
-            if (isInverted)
+            lockOnTarget = playerScriptRef.getLockOnTarget();
+            if (lockOnTarget == null)
             {
-                pitch += move.y * sensitivity;
+                inLockOn = false;
+                freeMovement = true;
             }
             else
             {
-                pitch -= move.y * sensitivity;
+                Debug.Log(lockOnTarget);
             }
-            pitch = Mathf.Clamp(pitch, pitchLimits.x, pitchLimits.y);
-            currentRotation = Vector3.SmoothDamp(currentRotation, new Vector3(pitch, yaw), ref smoothVelocity, smoothTime);
-
-            transform.eulerAngles = currentRotation;
-
-            transform.position = mainTarget.position - transform.forward * targetDistance;
         }
-        else
+        if (freeMovement)
         {
-            centreCameraFollow(mainTarget);
+            freeOrbitMode(mainTarget);
         }
-
-        
-        //transform.position = target.position - target.transform.forward * targetDistance; you could use this for a pov mode
-
-        /*if (centreCameraButtonPressed)
+        if (inpov)
         {
-            centreCamera(target);
+            povMode(povTarget);
         }
-        else
-        {
-            currentPosition = transform.position;
-        }
-        
-        void centreCamera(Transform centreTarget)
-        {
-            Vector3 newTargetPos = centreTarget.position - centreTarget.transform.forward * targetDistance;
-            //transform.position = newTargetPos;
-
-            currentPosition = Vector3.SmoothDamp(currentPosition, newTargetPos, ref centreVelocity, centreTime);
-            transform.position = currentPosition;
-
-            transform.LookAt(centreTarget);
-
-            pitch = 0;
-            yaw = 0;
-            //currentRotation = transform.localRotation;
-            //smoothVelocity = new Vector3(0, 0, 0);
-        }*/
-    }
-
-    void centreCameraSetup(Transform centreTarget)
-    {
-
-        transform.position = centreTarget.position - centreTarget.transform.forward * targetDistance;
-        transform.LookAt(centreTarget);
-        move = Vector2.zero;
-        centreCamera = true;
         
     }
 
-    void centreCameraFollow(Transform centreTarget)
+    void freeOrbitMode(Transform target)
     {
-        transform.position = mainTarget.position - transform.forward * targetDistance;
+        yaw += move.x * sensitivity;
+        if (isInverted)
+        {
+            pitch += move.y * sensitivity;
+        }
+        else
+        {
+            pitch -= move.y * sensitivity;
+        }
+        pitch = Mathf.Clamp(pitch, pitchLimits.x, pitchLimits.y);
+        currentRotation = Vector3.SmoothDamp(currentRotation, new Vector3(pitch, yaw), ref smoothVelocity, smoothTime);
+
+        transform.eulerAngles = currentRotation;
+
+        transform.position = target.position - transform.forward * targetDistance;
+
+        currentPosition = transform.position;
+    }
+
+    void resetPos(Transform target)
+    {
+        yaw = target.transform.eulerAngles.y;
+        pitch = 0;
+    }
+
+    void resetPosLeft(Transform target)
+    {
+        yaw = target.transform.eulerAngles.y + 90;
+        pitch = 0;
+    }
+
+    void resetPosRight(Transform target)
+    {
+        yaw = target.transform.eulerAngles.y - 90;
+        pitch = 0;
+    }
+
+    void povMode(Transform target)
+    {
+
+        Vector2 yawLimits = new Vector2(target.transform.eulerAngles.y - 40, target.transform.eulerAngles.y + 40);
+
+        yaw += move.x * povSensitivity;
+        if (isInverted)
+        {
+            pitch += move.y * povSensitivity;
+        }
+        else
+        {
+            pitch -= move.y * povSensitivity;
+        }
+
+        yaw = Mathf.Clamp(yaw, yawLimits.x, yawLimits.y);
+        pitch = Mathf.Clamp(pitch, povPitchLimits.x, povPitchLimits.y);
+
+        transform.eulerAngles = new Vector3(pitch, yaw);
+
+        //currentRotation = Vector3.SmoothDamp(currentRotation, new Vector3(pitch, yaw), ref smoothVelocity, smoothTime);*/
+
+        //transform.eulerAngles = currentRotation;
+
+        currentPosition = Vector3.SmoothDamp(currentPosition, target.transform.position, ref smoothVelocity, smoothTime);
+        transform.position = currentPosition;
     }
 }

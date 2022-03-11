@@ -41,6 +41,38 @@ public class @CameraControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""SnapLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""5309cf78-bb08-4957-bb7e-1ab9c7a3cde2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""SnapRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""7941a534-b12a-4dc7-bd9b-58dee9aed8f2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""POV"",
+                    ""type"": ""Button"",
+                    ""id"": ""9aca58f7-40a4-4488-a5bf-702a15b3d6e5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""LockOn"",
+                    ""type"": ""Button"",
+                    ""id"": ""ebe0300c-ee69-4b3d-a354-5248ced8b46e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -157,7 +189,7 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2d2bcce7-a483-4302-b774-679ed3427dc1"",
-                    ""path"": ""<Keyboard>/c"",
+                    ""path"": ""<Keyboard>/2"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -167,12 +199,78 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b67d5ee8-2b5d-4b13-9be4-e4035ed1e492"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""id"": ""d91f0925-0eba-48e7-9482-91e9a048f290"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Centre"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""27bfabbb-f0d9-4446-b370-af93b8380613"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SnapLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""63fdde11-e0fa-4702-a58a-53aec5178fc1"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""SnapLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""27dac757-49b0-401c-8af7-03b046357f4e"",
+                    ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Centre"",
+                    ""action"": ""SnapRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c264eece-c37d-4d7f-b195-b50959953650"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""SnapRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b30af21f-2259-4497-9333-45fd1bc57fb1"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""POV"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d29273d8-479d-45fd-acbf-bc2b65e5d7b6"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""LockOn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -197,6 +295,10 @@ public class @CameraControls : IInputActionCollection, IDisposable
         m_Camera_Keys = m_Camera.FindAction("Keys", throwIfNotFound: true);
         m_Camera_Move = m_Camera.FindAction("Move", throwIfNotFound: true);
         m_Camera_Centre = m_Camera.FindAction("Centre", throwIfNotFound: true);
+        m_Camera_SnapLeft = m_Camera.FindAction("SnapLeft", throwIfNotFound: true);
+        m_Camera_SnapRight = m_Camera.FindAction("SnapRight", throwIfNotFound: true);
+        m_Camera_POV = m_Camera.FindAction("POV", throwIfNotFound: true);
+        m_Camera_LockOn = m_Camera.FindAction("LockOn", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -249,6 +351,10 @@ public class @CameraControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Camera_Keys;
     private readonly InputAction m_Camera_Move;
     private readonly InputAction m_Camera_Centre;
+    private readonly InputAction m_Camera_SnapLeft;
+    private readonly InputAction m_Camera_SnapRight;
+    private readonly InputAction m_Camera_POV;
+    private readonly InputAction m_Camera_LockOn;
     public struct CameraActions
     {
         private @CameraControls m_Wrapper;
@@ -256,6 +362,10 @@ public class @CameraControls : IInputActionCollection, IDisposable
         public InputAction @Keys => m_Wrapper.m_Camera_Keys;
         public InputAction @Move => m_Wrapper.m_Camera_Move;
         public InputAction @Centre => m_Wrapper.m_Camera_Centre;
+        public InputAction @SnapLeft => m_Wrapper.m_Camera_SnapLeft;
+        public InputAction @SnapRight => m_Wrapper.m_Camera_SnapRight;
+        public InputAction @POV => m_Wrapper.m_Camera_POV;
+        public InputAction @LockOn => m_Wrapper.m_Camera_LockOn;
         public InputActionMap Get() { return m_Wrapper.m_Camera; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -274,6 +384,18 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 @Centre.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnCentre;
                 @Centre.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnCentre;
                 @Centre.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnCentre;
+                @SnapLeft.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapLeft;
+                @SnapLeft.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapLeft;
+                @SnapLeft.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapLeft;
+                @SnapRight.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapRight;
+                @SnapRight.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapRight;
+                @SnapRight.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapRight;
+                @POV.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnPOV;
+                @POV.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnPOV;
+                @POV.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnPOV;
+                @LockOn.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnLockOn;
+                @LockOn.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnLockOn;
+                @LockOn.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnLockOn;
             }
             m_Wrapper.m_CameraActionsCallbackInterface = instance;
             if (instance != null)
@@ -287,6 +409,18 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 @Centre.started += instance.OnCentre;
                 @Centre.performed += instance.OnCentre;
                 @Centre.canceled += instance.OnCentre;
+                @SnapLeft.started += instance.OnSnapLeft;
+                @SnapLeft.performed += instance.OnSnapLeft;
+                @SnapLeft.canceled += instance.OnSnapLeft;
+                @SnapRight.started += instance.OnSnapRight;
+                @SnapRight.performed += instance.OnSnapRight;
+                @SnapRight.canceled += instance.OnSnapRight;
+                @POV.started += instance.OnPOV;
+                @POV.performed += instance.OnPOV;
+                @POV.canceled += instance.OnPOV;
+                @LockOn.started += instance.OnLockOn;
+                @LockOn.performed += instance.OnLockOn;
+                @LockOn.canceled += instance.OnLockOn;
             }
         }
     }
@@ -314,5 +448,9 @@ public class @CameraControls : IInputActionCollection, IDisposable
         void OnKeys(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnCentre(InputAction.CallbackContext context);
+        void OnSnapLeft(InputAction.CallbackContext context);
+        void OnSnapRight(InputAction.CallbackContext context);
+        void OnPOV(InputAction.CallbackContext context);
+        void OnLockOn(InputAction.CallbackContext context);
     }
 }

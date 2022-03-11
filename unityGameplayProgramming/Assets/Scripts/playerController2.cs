@@ -131,6 +131,9 @@ public class playerController2 : MonoBehaviour
         controls.Player.LockOn.started += ctx => lockOnButtonPressed = true;
         controls.Player.LockOn.canceled += ctx => lockOnButtonPressed = false;
 
+        controls.Player.Freeze.started += ctx => freezePlayer();
+        controls.Player.Freeze.canceled += ctx => unfreezePlayer();
+
         animator = GetComponent<Animator>();
 
         rb = GetComponent<Rigidbody>();
@@ -207,15 +210,15 @@ public class playerController2 : MonoBehaviour
 
             if (isLockedOn)
             {
-                if (move.y < 0)
+                if (move.y < 0 && Mathf.Abs(move.x) < 0.3)
                 {
                     movement = -transform.forward * speed * Time.deltaTime;
                 }
-                if (move.x > 0)
+                if (move.x > 0 && Mathf.Abs(move.y) < 0.3)
                 {
                     movement = transform.right * strafeSpeed * Time.deltaTime;
                 }
-                if (move.x < 0)
+                if (move.x < 0 && Mathf.Abs(move.y) < 0.3)
                 {
                     movement = -transform.right * strafeSpeed * Time.deltaTime;
                 }
@@ -557,6 +560,19 @@ public class playerController2 : MonoBehaviour
     {
         lockOnTarget = newLockOnTarget;
         canLockOn = true;
+    }
+
+    public GameObject getLockOnTarget()
+    {
+        if (lockOnTarget != null)
+        {
+            return lockOnTarget;
+        }
+        else
+        {
+            return null;
+        }
+        
     }
 
     public void disableLockOn()
