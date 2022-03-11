@@ -763,6 +763,7 @@ MonoBehaviour:
   isInverted: 0
   mainTarget: {fileID: 1431458023}
   povTarget: {fileID: 2035705356}
+  playerScriptRef: {fileID: 0}
   targetDistance: 5
   smoothTime: 0.07
 --- !u!1 &516948306
@@ -1388,6 +1389,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RPG-Character
       objectReference: {fileID: 0}
+    - target: {fileID: 5129936777248624472, guid: 8a1575d1af970b941b291df348e096d7, type: 3}
+      propertyPath: cameraControllerRef
+      value: 
+      objectReference: {fileID: 464924015}
     - target: {fileID: 5760191867474843866, guid: 8a1575d1af970b941b291df348e096d7, type: 3}
       propertyPath: m_IsTrigger
       value: 1

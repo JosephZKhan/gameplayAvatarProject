@@ -206,10 +206,15 @@ public class playerController2 : MonoBehaviour
 
             //update movement
             //Vector3 movement = new Vector3(move.x, 0f, move.y) * speed * Time.deltaTime;
-            Vector3 movement = transform.forward * speed * Time.deltaTime;
+            //Vector3 movement = transform.forward * speed * Time.deltaTime;
+            Vector3 movement = new Vector3();
 
             if (isLockedOn)
             {
+                if (move.y > 0 && Mathf.Abs(move.x) < 0.3)
+                {
+                    movement = transform.forward * speed * Time.deltaTime;
+                }
                 if (move.y < 0 && Mathf.Abs(move.x) < 0.3)
                 {
                     movement = -transform.forward * speed * Time.deltaTime;
@@ -222,6 +227,10 @@ public class playerController2 : MonoBehaviour
                 {
                     movement = -transform.right * strafeSpeed * Time.deltaTime;
                 }
+            }
+            else
+            {
+                movement = transform.forward * speed * Time.deltaTime;
             }
 
             rb.AddForce(movement, ForceMode.VelocityChange);

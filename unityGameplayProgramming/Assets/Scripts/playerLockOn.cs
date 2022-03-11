@@ -7,6 +7,7 @@ public class playerLockOn : MonoBehaviour
 
     Collider lockOnColl;
     playerController2 playerScriptRef;
+    [SerializeField] controlCamera cameraControllerRef;
 
     int noOfTargets;
 
@@ -30,6 +31,7 @@ public class playerLockOn : MonoBehaviour
         if (other.gameObject.tag == "Punchable")
         {
             playerScriptRef.assignLockOnTarget(other.gameObject);
+            cameraControllerRef.assignLockOnTarget(other.gameObject);
             noOfTargets++;
         }
     }

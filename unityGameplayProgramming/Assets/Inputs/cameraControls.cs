@@ -59,6 +59,14 @@ public class @CameraControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""SnapUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""99cf7baf-95ee-4464-a82e-246295bf11dd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""POV"",
                     ""type"": ""Button"",
                     ""id"": ""9aca58f7-40a4-4488-a5bf-702a15b3d6e5"",
@@ -70,6 +78,22 @@ public class @CameraControls : IInputActionCollection, IDisposable
                     ""name"": ""LockOn"",
                     ""type"": ""Button"",
                     ""id"": ""ebe0300c-ee69-4b3d-a354-5248ced8b46e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""ZoomIn"",
+                    ""type"": ""Button"",
+                    ""id"": ""1494abb9-6da7-436c-a42d-d8194cb061bc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""ZoomOut"",
+                    ""type"": ""Button"",
+                    ""id"": ""326bf54d-ab3d-4a6c-83d0-d779859246fe"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -273,6 +297,39 @@ public class @CameraControls : IInputActionCollection, IDisposable
                     ""action"": ""LockOn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8c69006-b604-4429-87dd-51ccaef04016"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SnapUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""36cee880-cbfd-4e14-9f43-4d2cc4aff699"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ZoomIn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b651b924-6005-4846-86d9-52e844eb96be"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ZoomOut"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -297,8 +354,11 @@ public class @CameraControls : IInputActionCollection, IDisposable
         m_Camera_Centre = m_Camera.FindAction("Centre", throwIfNotFound: true);
         m_Camera_SnapLeft = m_Camera.FindAction("SnapLeft", throwIfNotFound: true);
         m_Camera_SnapRight = m_Camera.FindAction("SnapRight", throwIfNotFound: true);
+        m_Camera_SnapUp = m_Camera.FindAction("SnapUp", throwIfNotFound: true);
         m_Camera_POV = m_Camera.FindAction("POV", throwIfNotFound: true);
         m_Camera_LockOn = m_Camera.FindAction("LockOn", throwIfNotFound: true);
+        m_Camera_ZoomIn = m_Camera.FindAction("ZoomIn", throwIfNotFound: true);
+        m_Camera_ZoomOut = m_Camera.FindAction("ZoomOut", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -353,8 +413,11 @@ public class @CameraControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Camera_Centre;
     private readonly InputAction m_Camera_SnapLeft;
     private readonly InputAction m_Camera_SnapRight;
+    private readonly InputAction m_Camera_SnapUp;
     private readonly InputAction m_Camera_POV;
     private readonly InputAction m_Camera_LockOn;
+    private readonly InputAction m_Camera_ZoomIn;
+    private readonly InputAction m_Camera_ZoomOut;
     public struct CameraActions
     {
         private @CameraControls m_Wrapper;
@@ -364,8 +427,11 @@ public class @CameraControls : IInputActionCollection, IDisposable
         public InputAction @Centre => m_Wrapper.m_Camera_Centre;
         public InputAction @SnapLeft => m_Wrapper.m_Camera_SnapLeft;
         public InputAction @SnapRight => m_Wrapper.m_Camera_SnapRight;
+        public InputAction @SnapUp => m_Wrapper.m_Camera_SnapUp;
         public InputAction @POV => m_Wrapper.m_Camera_POV;
         public InputAction @LockOn => m_Wrapper.m_Camera_LockOn;
+        public InputAction @ZoomIn => m_Wrapper.m_Camera_ZoomIn;
+        public InputAction @ZoomOut => m_Wrapper.m_Camera_ZoomOut;
         public InputActionMap Get() { return m_Wrapper.m_Camera; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -390,12 +456,21 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 @SnapRight.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapRight;
                 @SnapRight.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapRight;
                 @SnapRight.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapRight;
+                @SnapUp.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapUp;
+                @SnapUp.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapUp;
+                @SnapUp.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnSnapUp;
                 @POV.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnPOV;
                 @POV.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnPOV;
                 @POV.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnPOV;
                 @LockOn.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnLockOn;
                 @LockOn.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnLockOn;
                 @LockOn.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnLockOn;
+                @ZoomIn.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomIn;
+                @ZoomIn.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomIn;
+                @ZoomIn.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomIn;
+                @ZoomOut.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomOut;
+                @ZoomOut.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomOut;
+                @ZoomOut.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomOut;
             }
             m_Wrapper.m_CameraActionsCallbackInterface = instance;
             if (instance != null)
@@ -415,12 +490,21 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 @SnapRight.started += instance.OnSnapRight;
                 @SnapRight.performed += instance.OnSnapRight;
                 @SnapRight.canceled += instance.OnSnapRight;
+                @SnapUp.started += instance.OnSnapUp;
+                @SnapUp.performed += instance.OnSnapUp;
+                @SnapUp.canceled += instance.OnSnapUp;
                 @POV.started += instance.OnPOV;
                 @POV.performed += instance.OnPOV;
                 @POV.canceled += instance.OnPOV;
                 @LockOn.started += instance.OnLockOn;
                 @LockOn.performed += instance.OnLockOn;
                 @LockOn.canceled += instance.OnLockOn;
+                @ZoomIn.started += instance.OnZoomIn;
+                @ZoomIn.performed += instance.OnZoomIn;
+                @ZoomIn.canceled += instance.OnZoomIn;
+                @ZoomOut.started += instance.OnZoomOut;
+                @ZoomOut.performed += instance.OnZoomOut;
+                @ZoomOut.canceled += instance.OnZoomOut;
             }
         }
     }
@@ -450,7 +534,10 @@ public class @CameraControls : IInputActionCollection, IDisposable
         void OnCentre(InputAction.CallbackContext context);
         void OnSnapLeft(InputAction.CallbackContext context);
         void OnSnapRight(InputAction.CallbackContext context);
+        void OnSnapUp(InputAction.CallbackContext context);
         void OnPOV(InputAction.CallbackContext context);
         void OnLockOn(InputAction.CallbackContext context);
+        void OnZoomIn(InputAction.CallbackContext context);
+        void OnZoomOut(InputAction.CallbackContext context);
     }
 }
