@@ -108,7 +108,10 @@ public class controlCamera : MonoBehaviour
             }
             else
             {
-                lockOnMode(lockOnTarget.transform);
+                if (lockOnTarget != null)
+                {
+                    lockOnMode(lockOnTarget.transform);
+                }
             }
         }
 

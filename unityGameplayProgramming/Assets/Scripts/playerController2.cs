@@ -211,7 +211,7 @@ public class playerController2 : MonoBehaviour
             //Vector3 movement = transform.forward * speed * Time.deltaTime;
             Vector3 movement = new Vector3();
 
-            if (isLockedOn)
+            if (isLockedOn && lockOnTarget != null)
             {
                 if (move.y > 0 && Mathf.Abs(move.x) < 0.3)
                 {
