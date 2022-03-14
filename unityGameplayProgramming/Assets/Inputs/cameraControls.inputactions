@@ -287,6 +287,17 @@
                 },
                 {
                     "name": "",
+                    "id": "ade2cc1d-3911-40b8-9920-1e3ea6342a7c",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LockOn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b8c69006-b604-4429-87dd-51ccaef04016",
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",
@@ -303,6 +314,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
+                    "action": "ZoomIn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1b04d08-5002-4d7f-8d6f-a237d0286b3b",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "ZoomIn",
                     "isComposite": false,
                     "isPartOfComposite": false

@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &755272658612342193
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4012693116907285366}
+  m_Layer: 0
+  m_Name: playerPOV
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4012693116907285366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755272658612342193}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.38, z: 0.79}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4428321842127708081}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4428321840802852521
 GameObject:
   m_ObjectHideFlags: 0
@@ -15781,6 +15811,7 @@ Transform:
   - {fileID: 4428321842594925720}
   - {fileID: 4428321842915227823}
   - {fileID: 8291661181156626161}
+  - {fileID: 4012693116907285366}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -15860,6 +15891,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 150
   runSpeed: 300
+  strafeSpeed: 8
   turnSmoothTime: 0.2
   jumpVelocity: 40
   gravityScale: 8
@@ -15936,6 +15968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88346a9bbde2cb44dbfe54da90b8a3dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraControllerRef: {fileID: 0}
 --- !u!1 &4428321842325023154
 GameObject:
   m_ObjectHideFlags: 0

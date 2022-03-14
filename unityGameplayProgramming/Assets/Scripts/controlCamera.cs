@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class controlCamera : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class controlCamera : MonoBehaviour
 
     [SerializeField] Transform mainTarget;
     [SerializeField] Transform povTarget;
-    [SerializeField] playerController2 playerScriptRef;
+    [SerializeField] Text ringCount;
 
     public float targetDistance = 5;
     Vector2 pitchLimits = new Vector2(-20, 55);
@@ -38,6 +39,10 @@ public class controlCamera : MonoBehaviour
     bool freeMovement = true;
     bool inpov = false;
     bool inLockOn = false;
+    bool canLockOn = false;
+
+    bool povButtonPressed = false;
+    bool lockOnButtonPressed = false;
 
     GameObject lockOnTarget;
     public float lockOnTargetDistance = 7;
@@ -46,6 +51,8 @@ public class controlCamera : MonoBehaviour
 
     bool zoomIn;
     bool zoomOut;
+
+    public float zoomSpeed = 1;
 
 
     void Awake()
@@ -64,19 +71,12 @@ public class controlCamera : MonoBehaviour
         controls.Camera.SnapUp.started += ctx => resetPosUp(mainTarget);
 
         controls.Camera.POV.started += ctx => inpov = true;
-        controls.Camera.POV.started += ctx => freeMovement = false;
-        //controls.Camera.POV.started += ctx => resetPos(povTarget);
 
-        controls.Camera.POV.canceled += ctx => inpov = false;
-        controls.Camera.POV.canceled += ctx => freeMovement = true;
+        controls.Camera.POV.canceled += ctx => endPovMode();
 
         controls.Camera.LockOn.performed += ctx => inLockOn = true;
-        controls.Camera.LockOn.performed += ctx => inpov = false;
-        controls.Camera.LockOn.performed += ctx => freeMovement = false;
 
-        controls.Camera.LockOn.canceled += ctx => inLockOn = false;
-        controls.Camera.LockOn.canceled += ctx => freeMovement = true;
-        controls.Camera.LockOn.canceled += ctx => resetPos(mainTarget);
+        controls.Camera.LockOn.canceled += ctx => endLockOnMode();
 
         controls.Camera.ZoomIn.performed += ctx => zoomIn = true;
         controls.Camera.ZoomIn.canceled += ctx => zoomIn = false;
@@ -101,7 +101,7 @@ public class controlCamera : MonoBehaviour
     {
         if (inLockOn)
         {
-            if (lockOnTarget == null)
+            if (!canLockOn)
             {
                 inLockOn = false;
                 freeMovement = true;
@@ -111,14 +111,24 @@ public class controlCamera : MonoBehaviour
                 lockOnMode(lockOnTarget.transform);
             }
         }
+
         if (freeMovement)
         {
             freeOrbitMode(mainTarget);
         }
+
         if (inpov)
         {
             povMode(povTarget);
         }
+
+        /*if (povButtonPressed)
+        {
+            if (canPov)
+            {
+                povMode(povTarget);
+            }
+        }*/
         
     }
 
@@ -134,6 +144,8 @@ public class controlCamera : MonoBehaviour
             pitch -= move.y * sensitivity;
         }
         pitch = Mathf.Clamp(pitch, pitchLimits.x, pitchLimits.y);
+
+
         currentRotation = Vector3.SmoothDamp(currentRotation, new Vector3(pitch, yaw), ref smoothVelocity, smoothTime);
 
         transform.eulerAngles = currentRotation;
@@ -142,13 +154,23 @@ public class controlCamera : MonoBehaviour
 
         currentPosition = transform.position;
 
-        zoom = 60;
-        camera.fieldOfView = zoom;
+        
     }
 
     void resetPos(Transform target)
     {
         yaw = target.transform.eulerAngles.y;
+/*
+        float newYaw;
+        newYaw = Mathf.Clamp(yaw, (yaw - (yaw % 360)), (yaw + (yaw % 360)));
+
+        
+
+        newYaw += target.transform.eulerAngles.y;
+        Debug.Log(yaw);
+
+        yaw = newYaw;*/
+
         pitch = 0;
     }
 
@@ -203,30 +225,71 @@ public class controlCamera : MonoBehaviour
 
         if (zoomIn)
         {
-            zoom++;
+            zoom = zoom + zoomSpeed;
             //Debug.Log("zoom in");
         }
         if (zoomOut)
         {
-            zoom--;
+            zoom = zoom - zoomSpeed;
             //Debug.Log("zoom out");
         }
         zoom = Mathf.Clamp(zoom, zoomLimits.x, zoomLimits.y);
         camera.fieldOfView = zoom;
 
+        freeMovement = false;
+        ringCount.gameObject.SetActive(false);
+
+    }
+
+    void endPovMode()
+    {
+        if (inpov)
+        {
+            ringCount.gameObject.SetActive(true);
+            freeMovement = true;
+            inpov = false;
+            resetPos(mainTarget);
+
+            zoom = 60;
+            camera.fieldOfView = zoom;
+        }
+        
     }
 
     public void assignLockOnTarget(GameObject newLockOnTarget)
     {
+        canLockOn = true;
         lockOnTarget = newLockOnTarget;
+    }
+
+    public void disableLockOn()
+    {
+        canLockOn = false;
     }
 
     void lockOnMode(Transform target)
     {
-        Vector3 newPosition = target.position - (mainTarget.transform.forward * lockOnTargetDistance) + (mainTarget.transform.up * 5);
+
+        inpov = false;
+        freeMovement = false;
+
+        float playerDistFromTarget = Vector3.Distance(mainTarget.transform.position, target.transform.position);
+        playerDistFromTarget = playerDistFromTarget * 0.25f;
+
+        Vector3 newPosition = target.position - (mainTarget.transform.forward * lockOnTargetDistance * playerDistFromTarget) + (mainTarget.transform.up * 5);
         currentPosition = Vector3.SmoothDamp(currentPosition, newPosition, ref smoothVelocity, smoothTime);
 
         transform.position = currentPosition;
         transform.LookAt(target);
+    }
+
+    void endLockOnMode()
+    {
+        if (inLockOn)
+        {
+            inLockOn = false;
+            freeMovement = true;
+            resetPos(mainTarget);
+        }
     }
 }

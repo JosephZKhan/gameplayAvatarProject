@@ -23,6 +23,7 @@ public class playerLockOn : MonoBehaviour
         if (noOfTargets <= 0)
         {
             playerScriptRef.disableLockOn();
+            cameraControllerRef.disableLockOn();
         }
     }
 
@@ -30,9 +31,12 @@ public class playerLockOn : MonoBehaviour
     {
         if (other.gameObject.tag == "Punchable")
         {
-            playerScriptRef.assignLockOnTarget(other.gameObject);
-            cameraControllerRef.assignLockOnTarget(other.gameObject);
-            noOfTargets++;
+            if (!playerScriptRef.getIsLockedOn())
+            {
+                playerScriptRef.assignLockOnTarget(other.gameObject);
+                cameraControllerRef.assignLockOnTarget(other.gameObject);
+                noOfTargets++;
+            }
         }
     }
 
@@ -40,7 +44,11 @@ public class playerLockOn : MonoBehaviour
     {
         if (other.gameObject.tag == "Punchable")
         {
-            noOfTargets--;
+            if (!playerScriptRef.getIsLockedOn())
+            {
+                noOfTargets--;
+            }
+            //noOfTargets--;
         }
     }
 }

@@ -34,6 +34,7 @@ public class playerController2 : MonoBehaviour
 
     Collider coll;
     Collider punchColl;
+    SphereCollider lockOnColl;
 
     bool isRunning;
 
@@ -141,6 +142,7 @@ public class playerController2 : MonoBehaviour
 
         coll = GetComponent<CapsuleCollider>();
         punchColl = GetComponent<BoxCollider>();
+        lockOnColl = GetComponent<SphereCollider>();
 
         punchColl.enabled = false;
 
@@ -217,7 +219,10 @@ public class playerController2 : MonoBehaviour
                 }
                 if (move.y < 0 && Mathf.Abs(move.x) < 0.3)
                 {
-                    movement = -transform.forward * speed * Time.deltaTime;
+                    if (Vector3.Distance(transform.position, lockOnTarget.transform.position) < lockOnColl.radius)
+                    {
+                        movement = -transform.forward * speed * Time.deltaTime;
+                    }
                 }
                 if (move.x > 0 && Mathf.Abs(move.y) < 0.3)
                 {
@@ -598,6 +603,11 @@ public class playerController2 : MonoBehaviour
         transform.LookAt(adjustedPos);
         isLockedOn = true;
         //transform.rotation.SetEulerAngles(new Vector3(0.0f, transform.rotation.y, 0.0f));
+    }
+
+    public bool getIsLockedOn()
+    {
+        return isLockedOn;
     }
 
 }
