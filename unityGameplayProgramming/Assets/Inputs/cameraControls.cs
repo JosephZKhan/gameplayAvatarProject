@@ -213,7 +213,7 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2d2bcce7-a483-4302-b774-679ed3427dc1"",
-                    ""path"": ""<Keyboard>/2"",
+                    ""path"": ""<Keyboard>/numpad2"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -246,7 +246,7 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""63fdde11-e0fa-4702-a58a-53aec5178fc1"",
-                    ""path"": ""<Keyboard>/1"",
+                    ""path"": ""<Keyboard>/numpad4"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -268,7 +268,7 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c264eece-c37d-4d7f-b195-b50959953650"",
-                    ""path"": ""<Keyboard>/3"",
+                    ""path"": ""<Keyboard>/numpad6"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -289,6 +289,17 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""be43269a-dc7f-4429-bca7-db0fa36ab022"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""POV"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""d29273d8-479d-45fd-acbf-bc2b65e5d7b6"",
                     ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
@@ -301,10 +312,10 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ade2cc1d-3911-40b8-9920-1e3ea6342a7c"",
-                    ""path"": ""<Keyboard>/z"",
+                    ""path"": ""<Keyboard>/rightShift"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""LockOn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -316,6 +327,17 @@ public class @CameraControls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
+                    ""action"": ""SnapUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""31b47eeb-cec2-46f7-ab46-3fa5246daf4c"",
+                    ""path"": ""<Keyboard>/numpad8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""SnapUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -334,10 +356,10 @@ public class @CameraControls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a1b04d08-5002-4d7f-8d6f-a237d0286b3b"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/2"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""ZoomIn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -349,6 +371,17 @@ public class @CameraControls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
+                    ""action"": ""ZoomOut"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""20f7675d-f648-465d-8062-332ad4da33e4"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""ZoomOut"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
