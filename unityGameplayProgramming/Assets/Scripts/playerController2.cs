@@ -645,10 +645,11 @@ public class playerController2 : MonoBehaviour
             splinePathPoint += (move.y * walkSpeed / 10 * Time.deltaTime);
         }
 
-        if (splinePathPoint >= pathCreator.path.GetClosestPointOnPath())
-        
+        Vector3 playerPathPos = new Vector3(pathCreator.path.GetPointAtDistance(splinePathPoint).x, transform.position.y, pathCreator.path.GetPointAtDistance(splinePathPoint).z);
+        transform.position = playerPathPos;
 
-        transform.position = pathCreator.path.GetPointAtDistance(splinePathPoint);
+
+        //transform.position = pathCreator.path.GetPointAtDistance(splinePathPoint);
 
         if (move.y > 0)
         {
@@ -659,6 +660,13 @@ public class playerController2 : MonoBehaviour
         {
             transform.eulerAngles = new Vector3(0, pathCreator.path.GetRotationAtDistance(splinePathPoint).eulerAngles.y - 180, 0);
         }
+
+        //use isRunning bool to set movement speed. scaled with move magnitude
+        float speed = ((isRunning && isGrounded) ? runSpeed : walkSpeed) * move.magnitude;
+
+        //update blend tree to determing walking/running animation
+        float animationSpeedPercent = ((isRunning) ? 1 : 0.5f) * move.magnitude;
+        animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
     }
 
 }
