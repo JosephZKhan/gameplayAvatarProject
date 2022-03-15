@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PathCreation;
 
 public class playerController2 : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class playerController2 : MonoBehaviour
     public float strafeSpeed = 8;
 
     public float turnSmoothTime = 0.2f;
+    float currentTurnSmoothTime;
     float turnSmoothVelocity;
 
     bool jumpButtonPressed;
@@ -102,6 +104,11 @@ public class playerController2 : MonoBehaviour
 
     bool lockOnButtonPressed = false;
     bool isLockedOn = false;
+
+    public PathCreator pathCreator;
+
+    public bool onSpline = false;
+    public float splinePathPoint;
 
 
 
@@ -194,67 +201,81 @@ public class playerController2 : MonoBehaviour
 
     void FixedUpdate()
     {
-        //if player can walk
-        if (!freezeWalking)
+
+        if (onSpline)
         {
-            //use isRunning bool to set movement speed. scaled with move magnitude
-            float speed = ((isRunning && isGrounded) ? runSpeed : walkSpeed) * move.magnitude;
 
-            if (isSpeedBoosted)
+            splineMovement();
+
+        }
+        else
+        {
+            currentTurnSmoothTime = turnSmoothTime;
+
+            //if player can walk
+            if (!freezeWalking)
             {
-                speed = speed * speedBoostMagnitude;
-                isRunning = true;
-            }
+                //use isRunning bool to set movement speed. scaled with move magnitude
+                float speed = ((isRunning && isGrounded) ? runSpeed : walkSpeed) * move.magnitude;
 
-            //update movement
-            //Vector3 movement = new Vector3(move.x, 0f, move.y) * speed * Time.deltaTime;
-            //Vector3 movement = transform.forward * speed * Time.deltaTime;
-            Vector3 movement = new Vector3();
+                if (isSpeedBoosted)
+                {
+                    speed = speed * speedBoostMagnitude;
+                    isRunning = true;
+                }
 
-            if (isLockedOn && lockOnTarget != null)
-            {
-                if (move.y > 0 && Mathf.Abs(move.x) < 0.3)
+                //update movement
+                //Vector3 movement = new Vector3(move.x, 0f, move.y) * speed * Time.deltaTime;
+                //Vector3 movement = transform.forward * speed * Time.deltaTime;
+                Vector3 movement = new Vector3();
+
+                if (isLockedOn && lockOnTarget != null)
+                {
+                    if (move.y > 0 && Mathf.Abs(move.x) < 0.3)
+                    {
+                        movement = transform.forward * speed * Time.deltaTime;
+                    }
+                    if (move.y < 0 && Mathf.Abs(move.x) < 0.3)
+                    {
+                        if (Vector3.Distance(transform.position, lockOnTarget.transform.position) < lockOnColl.radius)
+                        {
+                            movement = -transform.forward * speed * Time.deltaTime;
+                        }
+                    }
+                    if (move.x > 0 && Mathf.Abs(move.y) < 0.3)
+                    {
+                        movement = transform.right * strafeSpeed * Time.deltaTime;
+                    }
+                    if (move.x < 0 && Mathf.Abs(move.y) < 0.3)
+                    {
+                        movement = -transform.right * strafeSpeed * Time.deltaTime;
+                    }
+                }
+                else
                 {
                     movement = transform.forward * speed * Time.deltaTime;
                 }
-                if (move.y < 0 && Mathf.Abs(move.x) < 0.3)
+
+                rb.AddForce(movement, ForceMode.VelocityChange);
+
+                //normalize movement for rotation
+                Vector2 moveDirection = move.normalized;
+
+                //if the user moves player
+                if (moveDirection != Vector2.zero)
                 {
-                    if (Vector3.Distance(transform.position, lockOnTarget.transform.position) < lockOnColl.radius)
-                    {
-                        movement = -transform.forward * speed * Time.deltaTime;
-                    }
+                    //rotate the player to face forwards
+                    float targetRotation = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+                    transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, currentTurnSmoothTime);
                 }
-                if (move.x > 0 && Mathf.Abs(move.y) < 0.3)
-                {
-                    movement = transform.right * strafeSpeed * Time.deltaTime;
-                }
-                if (move.x < 0 && Mathf.Abs(move.y) < 0.3)
-                {
-                    movement = -transform.right * strafeSpeed * Time.deltaTime;
-                }
+
+                //update blend tree to determing walking/running animation
+                float animationSpeedPercent = ((isRunning) ? 1 : 0.5f) * move.magnitude;
+                animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
             }
-            else
-            {
-                movement = transform.forward * speed * Time.deltaTime;
-            }
-
-            rb.AddForce(movement, ForceMode.VelocityChange);
-
-            //normalize movement for rotation
-            Vector2 moveDirection = move.normalized;
-
-            //if the user moves player
-            if (moveDirection != Vector2.zero)
-            {
-                //rotate the player to face forwards
-                float targetRotation = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
-                transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, turnSmoothTime);
-            }
-
-            //update blend tree to determing walking/running animation
-            float animationSpeedPercent = ((isRunning) ? 1 : 0.5f) * move.magnitude;
-            animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
         }
+
+        
 
         //set player gravity depending on hover status
         Vector3 gravity = ((isHovering) ? hoverGravityScale : gravityScale) * globalGravity * Vector3.up;
@@ -608,6 +629,36 @@ public class playerController2 : MonoBehaviour
     public bool getIsLockedOn()
     {
         return isLockedOn;
+    }
+
+    void splineMovement()
+    {
+        currentTurnSmoothTime = 0;
+        move.x = 0;
+
+        if (isRunning)
+        {
+            splinePathPoint += (move.y * runSpeed / 10 * Time.deltaTime);
+        }
+        else
+        {
+            splinePathPoint += (move.y * walkSpeed / 10 * Time.deltaTime);
+        }
+
+        if (splinePathPoint >= pathCreator.path.GetClosestPointOnPath())
+        
+
+        transform.position = pathCreator.path.GetPointAtDistance(splinePathPoint);
+
+        if (move.y > 0)
+        {
+            transform.eulerAngles = new Vector3(0, pathCreator.path.GetRotationAtDistance(splinePathPoint).eulerAngles.y, 0);
+        }
+
+        if (move.y < 0)
+        {
+            transform.eulerAngles = new Vector3(0, pathCreator.path.GetRotationAtDistance(splinePathPoint).eulerAngles.y - 180, 0);
+        }
     }
 
 }

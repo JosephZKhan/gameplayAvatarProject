@@ -15913,6 +15913,7 @@ MonoBehaviour:
   hasSuperPunch: 0
   superPunchDuration: 5
   cameraTransform: {fileID: 0}
+  onSpline: 0
 --- !u!114 &4428321842127708085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15951,8 +15952,8 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4428321842127708087}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
+  m_IsTrigger: 1
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
