@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Punchable
   - FxTemporaire
+  - Camera Target
   layers:
   - Default
   - TransparentFX

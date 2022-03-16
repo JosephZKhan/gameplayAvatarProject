@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using PathCreation;
 
 public class controlCamera : MonoBehaviour
 {
@@ -53,6 +54,13 @@ public class controlCamera : MonoBehaviour
     bool zoomOut;
 
     public float zoomSpeed = 1;
+
+    public PathCreator pathCreator;
+
+    public bool onSpline = false;
+    public float splinePathPoint;
+
+    int splineFlipDir = 1;
 
 
     void Awake()
@@ -123,6 +131,11 @@ public class controlCamera : MonoBehaviour
         if (inpov)
         {
             povMode(povTarget);
+        }
+
+        if (onSpline)
+        {
+            splineMode(mainTarget);
         }
 
         /*if (povButtonPressed)
@@ -294,5 +307,53 @@ public class controlCamera : MonoBehaviour
             freeMovement = true;
             resetPos(mainTarget);
         }
+    }
+
+    public void setSplinePoint(float newPoint)
+    {
+        splinePathPoint = newPoint;
+    }
+
+    public void setOnSpline(bool newOnSpline)
+    {
+        onSpline = newOnSpline;
+    }
+
+    public void setSplineFlipDir(int newFlipDir)
+    {
+        splineFlipDir = newFlipDir;
+    }
+
+    void splineMode(Transform target)
+    {
+        freeMovement = false;
+        inpov = false;
+        canLockOn = false;
+        
+        Vector3 newPos = target.position + target.transform.right * targetDistance * splineFlipDir;
+        newPos.y = target.position.y;
+        StartCoroutine (moveToPoint(newPos));
+
+        transform.LookAt(target);
+
+    }
+
+    IEnumerator moveToPoint(Vector3 endPos)
+    {
+        float elapsedTime = 0;
+        float waitTime = .3f;
+
+        currentPosition = transform.position;
+
+        while (elapsedTime < waitTime)
+        {
+            transform.position = Vector3.Lerp(currentPosition, endPos, (elapsedTime / waitTime));
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+
+        transform.position = endPos;
+        yield return null;
     }
 }

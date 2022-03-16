@@ -98,6 +98,7 @@ public class playerController2 : MonoBehaviour
     switchBehaviour targetSwitch;
 
     [SerializeField] Transform cameraTransform;
+    [SerializeField] controlCamera cameraScriptRef;
 
     bool canLockOn = false;
     GameObject lockOnTarget;
@@ -201,6 +202,7 @@ public class playerController2 : MonoBehaviour
 
     void FixedUpdate()
     {
+        cameraScriptRef.setOnSpline(onSpline);
 
         if (onSpline)
         {
@@ -208,6 +210,7 @@ public class playerController2 : MonoBehaviour
             splineMovement();
 
         }
+
         else
         {
             currentTurnSmoothTime = turnSmoothTime;
@@ -654,11 +657,13 @@ public class playerController2 : MonoBehaviour
         if (move.y > 0)
         {
             transform.eulerAngles = new Vector3(0, pathCreator.path.GetRotationAtDistance(splinePathPoint).eulerAngles.y, 0);
+            cameraScriptRef.setSplineFlipDir(1);
         }
 
         if (move.y < 0)
         {
             transform.eulerAngles = new Vector3(0, pathCreator.path.GetRotationAtDistance(splinePathPoint).eulerAngles.y - 180, 0);
+            cameraScriptRef.setSplineFlipDir(-1);
         }
 
         //use isRunning bool to set movement speed. scaled with move magnitude
@@ -667,6 +672,8 @@ public class playerController2 : MonoBehaviour
         //update blend tree to determing walking/running animation
         float animationSpeedPercent = ((isRunning) ? 1 : 0.5f) * move.magnitude;
         animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
+
+        //cameraScriptRef.setSplinePoint(splinePathPoint);
     }
 
 }
