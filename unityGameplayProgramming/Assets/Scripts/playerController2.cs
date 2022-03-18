@@ -110,6 +110,7 @@ public class playerController2 : MonoBehaviour
 
     public bool onSpline = false;
     public float splinePathPoint;
+    //public EndOfPathInstruction end;
 
 
 
@@ -674,6 +675,15 @@ public class playerController2 : MonoBehaviour
         animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
 
         //cameraScriptRef.setSplinePoint(splinePathPoint);
+    }
+
+    public void setOnSpline(bool newOnSpline)
+    {
+        onSpline = newOnSpline;
+        /*if (!onSpline)
+        {
+            splinePathPoint = 0;
+        }*/
     }
 
 }

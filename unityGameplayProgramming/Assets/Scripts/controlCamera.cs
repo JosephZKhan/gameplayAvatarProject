@@ -317,6 +317,11 @@ public class controlCamera : MonoBehaviour
     public void setOnSpline(bool newOnSpline)
     {
         onSpline = newOnSpline;
+
+        if (!onSpline)
+        {
+            freeMovement = true;
+        }
     }
 
     public void setSplineFlipDir(int newFlipDir)
