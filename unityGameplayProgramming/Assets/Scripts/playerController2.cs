@@ -106,11 +106,11 @@ public class playerController2 : MonoBehaviour
     bool lockOnButtonPressed = false;
     bool isLockedOn = false;
 
-    public PathCreator pathCreator;
+    PathCreator pathCreator;
 
     public bool onSpline = false;
     public float splinePathPoint;
-    //public EndOfPathInstruction end;
+    public EndOfPathInstruction end;
 
 
 
@@ -207,8 +207,15 @@ public class playerController2 : MonoBehaviour
 
         if (onSpline)
         {
+            if (pathCreator != null)
+            {
+                splineMovement();
+            }
 
-            splineMovement();
+            else
+            {
+                onSpline = false;
+            }
 
         }
 
@@ -642,14 +649,14 @@ public class playerController2 : MonoBehaviour
 
         if (isRunning)
         {
-            splinePathPoint += (move.y * runSpeed / 10 * Time.deltaTime);
+            splinePathPoint += (move.y * runSpeed / 15 * Time.deltaTime);
         }
         else
         {
-            splinePathPoint += (move.y * walkSpeed / 10 * Time.deltaTime);
+            splinePathPoint += (move.y * walkSpeed / 15 * Time.deltaTime);
         }
 
-        Vector3 playerPathPos = new Vector3(pathCreator.path.GetPointAtDistance(splinePathPoint).x, transform.position.y, pathCreator.path.GetPointAtDistance(splinePathPoint).z);
+        Vector3 playerPathPos = new Vector3(pathCreator.path.GetPointAtDistance(splinePathPoint, end).x, transform.position.y, pathCreator.path.GetPointAtDistance(splinePathPoint).z);
         transform.position = playerPathPos;
 
 
@@ -657,13 +664,13 @@ public class playerController2 : MonoBehaviour
 
         if (move.y > 0)
         {
-            transform.eulerAngles = new Vector3(0, pathCreator.path.GetRotationAtDistance(splinePathPoint).eulerAngles.y, 0);
+            transform.eulerAngles = new Vector3(0, pathCreator.path.GetRotationAtDistance(splinePathPoint, end).eulerAngles.y, 0);
             cameraScriptRef.setSplineFlipDir(1);
         }
 
         if (move.y < 0)
         {
-            transform.eulerAngles = new Vector3(0, pathCreator.path.GetRotationAtDistance(splinePathPoint).eulerAngles.y - 180, 0);
+            transform.eulerAngles = new Vector3(0, pathCreator.path.GetRotationAtDistance(splinePathPoint, end).eulerAngles.y - 180, 0);
             cameraScriptRef.setSplineFlipDir(-1);
         }
 
@@ -684,6 +691,22 @@ public class playerController2 : MonoBehaviour
         {
             splinePathPoint = 0;
         }*/
+    }
+
+    public void setTargetSpline(PathCreator newTargetSpline)
+    {
+        pathCreator = newTargetSpline;
+        Debug.Log(pathCreator);
+    }
+
+    public void setSplinePoint(float newSplinePoint)
+    {
+        splinePathPoint = newSplinePoint;
+    }
+
+    public PathCreator getTargetSpline()
+    {
+        return pathCreator;
     }
 
 }

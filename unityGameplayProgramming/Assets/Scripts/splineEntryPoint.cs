@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PathCreation;
 
-public class splineFieldCollider : MonoBehaviour
+public class splineEntryPoint : MonoBehaviour
 {
+
+    public bool isStart;
 
     GameObject playerRef;
     Collider playerColl;
     playerController2 playerScriptRef;
 
-    // Start is called before the first frame update
+    [SerializeField] PathCreator targetPath;
+
     void Awake()
     {
         playerRef = GameObject.FindWithTag("Player");
@@ -17,20 +21,20 @@ public class splineFieldCollider : MonoBehaviour
         playerScriptRef = playerRef.GetComponent<playerController2>();
     }
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other == playerColl)
         {
-            if (playerScriptRef.getTargetSpline() != null)
+            playerScriptRef.setTargetSpline(targetPath);
+            if (isStart)
             {
-                playerScriptRef.setOnSpline(true);
-
-                Debug.Log("on spline");
+                playerScriptRef.setSplinePoint(0);
             }
         }
+
     }
 
-    void OnTriggerExit(Collider other)
+    /*void OnTriggerExit(Collider other)
     {
         if (other == playerColl)
         {
@@ -38,6 +42,5 @@ public class splineFieldCollider : MonoBehaviour
 
             Debug.Log("off spline");
         }
-        
-    }
+    }*/
 }

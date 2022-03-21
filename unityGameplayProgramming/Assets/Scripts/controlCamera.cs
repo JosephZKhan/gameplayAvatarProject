@@ -135,6 +135,7 @@ public class controlCamera : MonoBehaviour
 
         if (onSpline)
         {
+            resetPos(mainTarget);
             splineMode(mainTarget);
         }
 
@@ -173,7 +174,7 @@ public class controlCamera : MonoBehaviour
         
     }
 
-    void resetPos(Transform target)
+    public void resetPos(Transform target)
     {
         yaw = target.transform.eulerAngles.y;
 /*
@@ -335,7 +336,7 @@ public class controlCamera : MonoBehaviour
         inpov = false;
         canLockOn = false;
         
-        Vector3 newPos = target.position + target.transform.right * targetDistance * splineFlipDir;
+        Vector3 newPos = target.position + target.transform.right * (targetDistance * 2) * splineFlipDir;
         newPos.y = target.position.y;
         StartCoroutine (moveToPoint(newPos));
 
@@ -346,7 +347,7 @@ public class controlCamera : MonoBehaviour
     IEnumerator moveToPoint(Vector3 endPos)
     {
         float elapsedTime = 0;
-        float waitTime = .3f;
+        float waitTime = .1f;
 
         currentPosition = transform.position;
 
