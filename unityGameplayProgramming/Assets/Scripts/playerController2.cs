@@ -647,14 +647,19 @@ public class playerController2 : MonoBehaviour
         currentTurnSmoothTime = 0;
         move.x = 0;
 
-        if (isRunning)
+        if (!freezeWalking)
         {
-            splinePathPoint += (move.y * runSpeed / 15 * Time.deltaTime);
+            if (isRunning)
+            {
+                splinePathPoint += (move.y * runSpeed / 15 * Time.deltaTime);
+            }
+            else
+            {
+                splinePathPoint += (move.y * walkSpeed / 15 * Time.deltaTime);
+            }
         }
-        else
-        {
-            splinePathPoint += (move.y * walkSpeed / 15 * Time.deltaTime);
-        }
+
+        
 
         Vector3 playerPathPos = new Vector3(pathCreator.path.GetPointAtDistance(splinePathPoint, end).x, transform.position.y, pathCreator.path.GetPointAtDistance(splinePathPoint).z);
         transform.position = playerPathPos;
