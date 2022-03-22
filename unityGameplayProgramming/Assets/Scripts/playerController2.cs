@@ -112,6 +112,9 @@ public class playerController2 : MonoBehaviour
     public float splinePathPoint;
     public EndOfPathInstruction end;
 
+    bool canMoveForward = true;
+    bool canMoveBackward = true;
+
 
 
     // Start is called before the first frame update
@@ -646,17 +649,31 @@ public class playerController2 : MonoBehaviour
     {
         currentTurnSmoothTime = 0;
         move.x = 0;
+        canLockOn = false;
+
+
+        if (move.y > 0 && !canMoveForward)
+        {
+            move.y = 0;
+        }
+
+        if (move.y < 0 && !canMoveBackward)
+        {
+            move.y = 0;
+        }
+
+        //use isRunning bool to set movement speed. scaled with move magnitude
+        float speed = ((isRunning && isGrounded) ? runSpeed : walkSpeed) * move.magnitude;
+
+        if (isSpeedBoosted)
+        {
+            speed = speed * speedBoostMagnitude;
+            isRunning = true;
+        }
 
         if (!freezeWalking)
         {
-            if (isRunning)
-            {
-                splinePathPoint += (move.y * runSpeed / 15 * Time.deltaTime);
-            }
-            else
-            {
-                splinePathPoint += (move.y * walkSpeed / 15 * Time.deltaTime);
-            }
+            splinePathPoint += (move.y * speed / 15 * Time.deltaTime);
         }
 
         
@@ -679,8 +696,11 @@ public class playerController2 : MonoBehaviour
             cameraScriptRef.setSplineFlipDir(-1);
         }
 
-        //use isRunning bool to set movement speed. scaled with move magnitude
-        float speed = ((isRunning && isGrounded) ? runSpeed : walkSpeed) * move.magnitude;
+        /*Vector3 movement = new Vector3();
+        movement = transform.forward * speed * Time.deltaTime;
+        rb.AddForce(movement, ForceMode.VelocityChange);*/
+
+
 
         //update blend tree to determing walking/running animation
         float animationSpeedPercent = ((isRunning) ? 1 : 0.5f) * move.magnitude;
@@ -712,6 +732,21 @@ public class playerController2 : MonoBehaviour
     public PathCreator getTargetSpline()
     {
         return pathCreator;
+    }
+
+    public Vector2 getMovement()
+    {
+        return move;
+    }
+
+    public void setCanMoveForward(bool newBool)
+    {
+        canMoveForward = newBool;
+    }
+
+    public void setCanMoveBackward(bool newBool)
+    {
+        canMoveBackward = newBool;
     }
 
 }

@@ -21,6 +21,8 @@ public class breakableBox : MonoBehaviour
         if (other == playerPunch && other.enabled)
         {
             playerScriptRef.triggerPunchEffect();
+            playerScriptRef.setCanMoveForward(true);
+            playerScriptRef.setCanMoveBackward(true);
             Destroy(gameObject);
         }
     }
