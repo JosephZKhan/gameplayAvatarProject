@@ -347,7 +347,7 @@ public class controlCamera : MonoBehaviour
     IEnumerator moveToPoint(Vector3 endPos)
     {
         float elapsedTime = 0;
-        float waitTime = .1f;
+        float waitTime = .2f;
 
         currentPosition = transform.position;
 
