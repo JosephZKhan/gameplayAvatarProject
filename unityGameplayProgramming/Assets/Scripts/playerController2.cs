@@ -259,10 +259,12 @@ public class playerController2 : MonoBehaviour
                     if (move.x > 0 && Mathf.Abs(move.y) < 0.3)
                     {
                         movement = transform.right * strafeSpeed * Time.deltaTime;
+                        Debug.Log("bruh");
                     }
                     if (move.x < 0 && Mathf.Abs(move.y) < 0.3)
                     {
                         movement = -transform.right * strafeSpeed * Time.deltaTime;
+                        Debug.Log("bruh");
                     }
                 }
                 else

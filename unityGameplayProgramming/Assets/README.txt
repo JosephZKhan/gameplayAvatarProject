@@ -60,3 +60,6 @@ Lock On: Hold L2
 First-Person Mode: R3 (press right joystick)
 Zoom Out: R1
 Zoom In: R2
+
+COMPONENT 5 - 2.5D Spline Gameplay
+Demo Scene: splineDemoScene

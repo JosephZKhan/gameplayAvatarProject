@@ -55,7 +55,7 @@ public class controlCamera : MonoBehaviour
 
     public float zoomSpeed = 1;
 
-    public PathCreator pathCreator;
+    //public PathCreator pathCreator;
 
     public bool onSpline = false;
     public float splinePathPoint;
