@@ -10,9 +10,9 @@ public class playerController2 : MonoBehaviour
     Vector2 move;
     Vector2 moveDirection;
 
-    public float walkSpeed = 10;
-    public float runSpeed = 20;
-    public float strafeSpeed = 8;
+    public float walkSpeed = 150;
+    public float runSpeed = 300;
+    public float strafeSpeed = 80;
 
     public float turnSmoothTime = 0.2f;
     float currentTurnSmoothTime;

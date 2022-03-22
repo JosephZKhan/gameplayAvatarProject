@@ -22,7 +22,6 @@ public class splineObstacle : MonoBehaviour
         if (other == playerColl && other.enabled)
         {
             float playerMoveY = playerScriptRef.getMovement().y;
-            Debug.Log(playerMoveY);
 
             if (playerScriptRef.getMovement().y > 0)
             {
@@ -40,7 +39,6 @@ public class splineObstacle : MonoBehaviour
         if (other == playerColl && other.enabled)
         {
             float playerMoveY = playerScriptRef.getMovement().y;
-            Debug.Log(playerMoveY);
 
             if (playerScriptRef.getMovement().y < 0)
             {
