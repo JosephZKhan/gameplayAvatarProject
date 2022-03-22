@@ -23,11 +23,11 @@ public class splineObstacle : MonoBehaviour
         {
             float playerMoveY = playerScriptRef.getMovement().y;
 
-            if (playerScriptRef.getMovement().y > 0)
+            if (playerMoveY > 0)
             {
                 playerScriptRef.setCanMoveForward(false);
             }
-            if (playerScriptRef.getMovement().y < 0)
+            if (playerMoveY < 0)
             {
                 playerScriptRef.setCanMoveBackward(false);
             }
@@ -40,14 +40,9 @@ public class splineObstacle : MonoBehaviour
         {
             float playerMoveY = playerScriptRef.getMovement().y;
 
-            if (playerScriptRef.getMovement().y < 0)
-            {
-                playerScriptRef.setCanMoveForward(true);
-            }
-            if (playerScriptRef.getMovement().y > 0)
-            {
-                playerScriptRef.setCanMoveBackward(true);
-            }
+            playerScriptRef.setCanMoveForward(true);
+            playerScriptRef.setCanMoveBackward(true);
+
         }
     }
 }

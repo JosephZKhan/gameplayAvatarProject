@@ -36,7 +36,7 @@ public class splineFieldCollider : MonoBehaviour
         {
             playerScriptRef.setOnSpline(false);
 
-            //Debug.Log("off spline");
+            Debug.Log("off spline");
         }
         
     }

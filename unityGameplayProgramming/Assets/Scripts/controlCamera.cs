@@ -336,7 +336,7 @@ public class controlCamera : MonoBehaviour
         inpov = false;
         canLockOn = false;
         
-        Vector3 newPos = target.position + target.transform.right * (targetDistance * 2) * splineFlipDir;
+        Vector3 newPos = target.position + target.transform.right * (targetDistance * 3) * splineFlipDir;
         newPos.y = target.position.y;
         StartCoroutine (moveToPoint(newPos));
 
