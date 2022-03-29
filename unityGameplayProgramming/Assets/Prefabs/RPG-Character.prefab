@@ -15785,6 +15785,7 @@ GameObject:
   - component: {fileID: 4428321842127708085}
   - component: {fileID: 5760191867474843866}
   - component: {fileID: 5129936777248624472}
+  - component: {fileID: 3230326271344475487}
   m_Layer: 0
   m_Name: RPG-Character
   m_TagString: Player
@@ -15913,7 +15914,10 @@ MonoBehaviour:
   hasSuperPunch: 0
   superPunchDuration: 5
   cameraTransform: {fileID: 0}
+  cameraScriptRef: {fileID: 0}
   onSpline: 0
+  splinePathPoint: 0
+  end: 0
 --- !u!114 &4428321842127708085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15970,6 +15974,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraControllerRef: {fileID: 0}
+--- !u!1818360610 &3230326271344475487
+ScaleConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4428321842127708087}
+  m_Enabled: 1
+  m_Weight: 1
+  m_ScaleAtRest: {x: 1, y: 1, z: 1}
+  m_ScaleOffset: {x: 1, y: 1, z: 1}
+  m_AffectScalingX: 1
+  m_AffectScalingY: 1
+  m_AffectScalingZ: 1
+  m_IsContraintActive: 1
+  m_IsLocked: 0
+  m_Sources: []
 --- !u!1 &4428321842325023154
 GameObject:
   m_ObjectHideFlags: 0

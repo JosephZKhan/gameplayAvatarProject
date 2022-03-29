@@ -1,128 +1,127 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PathCreation;
 
 
 public class platformBehaviour : MonoBehaviour
 {
     Collider coll;
 
-    //public enum despawnCondition { despawnOnHit, despawnOnHitRespawn, blink };
-
-    public bool disappearsOnHit = false;
-    public float timeToDisappear = 4.0f;
-
-    public bool respawns = false;
-    public float timeToRespawn = 6.0f;
-
-    public bool blinking = false;
-    public float blinkInterval = 5.0f;
-    bool blinkActive = false;
-
-    public bool growOnHit = false;
     public enum axis { X, Y, Z };
-    public axis growAxis;
-    public float growthMultiplier = 2.5f;
+
+    [Header("Designer settings")]
+    [SerializeField] private Optional<float> Despawn = new Optional<float>(4.0f);
+    [SerializeField] private Optional<float> Respawn = new Optional<float>(4.0f);
+    [SerializeField] private OptionalBlink<float, bool> Blink = new OptionalBlink<float, bool>(2.5f, false);
+    [SerializeField] private OptionalGrow<float, float, axis> Grow = new OptionalGrow<float, float, axis>(3.0f, 6.5f, axis.Z);
+    //[SerializeField] private OptionalMove<axis, float> Move = new OptionalMove<axis, float>(axis.X, 3.5f);
+    [SerializeField] private OptionalMove<float, EndOfPathInstruction> Move = new OptionalMove<float, EndOfPathInstruction>(1.5f, EndOfPathInstruction.Reverse);
+
+    //PathCreator movePath;
+    //public float pathSpeed;
+    float pathPoint;
+    //public EndOfPathInstruction end;
+
     Vector3 finalSize;
-    public float timeToGrow = 5.0f;
 
-    GameObject playerRef;
-    Collider playerColl;
+    [SerializeField] private Transform surface;
+    [SerializeField] private PathCreator movePath;
 
-    Transform surface;
+    bool playerOnTop = false;
 
-    // Start is called before the first frame update
     void Awake()
     {
         coll = GetComponent<BoxCollider>();
 
-        playerRef = GameObject.FindWithTag("Player");
-        playerColl = playerRef.GetComponent<CapsuleCollider>();
-
-        surface = transform.Find("Plane");
-
-        if (blinking)
-        {
-            disappearsOnHit = false;
-            respawns = false;
-        }
-
-        if (growAxis == axis.X)
-        {
-            finalSize = new Vector3(transform.localScale.x * growthMultiplier, transform.localScale.y, transform.localScale.z);
-        }
-        if (growAxis == axis.Y)
-        {
-            finalSize = new Vector3(transform.localScale.x, transform.localScale.y * growthMultiplier, transform.localScale.z);
-        }
-        if (growAxis == axis.Z)
-        {
-            finalSize = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z * growthMultiplier);
-        }
+        //movePath = GetComponentInChildren<PathCreator>();
     }
 
     private void Start()
     {
-        if (blinking)
+        if (Blink.Enabled)
         {
             StartCoroutine(blink());
         }
     }
 
+    private void Update()
+    {
+        if (playerOnTop)
+        {
+            if (Despawn.Enabled)
+            {
+                StartCoroutine(triggerDespawn());
+            }
+            if (Grow.Enabled)
+            {
+                StartCoroutine(grow());
+            }
+        }
+
+        if (Move.Enabled)
+        {
+            pathPoint += Move.Speed * Time.deltaTime;
+            //Vector3 platformPathPos = new Vector3(movePath.path.GetPointAtDistance(pathPoint, end).x, movePath.path.GetPointAtDistance(pathPoint).y, movePath.path.GetPointAtDistance(pathPoint).z);
+            transform.position = new Vector3(movePath.path.GetPointAtDistance(pathPoint, Move.End).x, movePath.path.GetPointAtDistance(pathPoint, Move.End).y, movePath.path.GetPointAtDistance(pathPoint, Move.End).z);
+            transform.eulerAngles = new Vector3(0, movePath.path.GetRotationAtDistance(pathPoint, Move.End).eulerAngles.y, 0);
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider == playerColl)
+        /*if (collision.collider.CompareTag("Player"))
         {
-            Debug.Log("touching platform");
-            /*if (Physics.BoxCast(transform.position, transform.localScale, Vector3.up, transform.rotation, Mathf.Infinity))
-            {
+            // playerController2 t = collision.collider.GetComponent<playerController2>();
+            collision.collider.transform.parent = transform;
+        }*/
 
-            }*/
+        if (collision.collider.CompareTag("Player"))
+        {
 
-            if (playerRef.transform.position.y >= surface.transform.position.y)
+            if (collision.collider.transform.position.y >= surface.transform.position.y)
             {
-                Debug.Log("standing on top");
-                if (disappearsOnHit)
+                playerOnTop = true;
+
+                if (Move.Enabled)
                 {
-                    StartCoroutine(triggerDespawn());
-                }
-                if (growOnHit)
-                {
-                    StartCoroutine(grow());
+                    collision.collider.transform.parent = transform;
                 }
             }
-            
-            /*if (Physics.Raycast(coll.transform.position, Vector3.up, 100.1f))
+            else
             {
-                *//*Debug.Log("standing on top");
-                if (disappearsOnHit)
-                {
-                    StartCoroutine(triggerDespawn());
-                }
-                if (growOnHit)
-                {
-                    StartCoroutine(grow());
-                }*//*
-            }*/
+                playerOnTop = false;
+            }
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            // playerController2 t = collision.collider.GetComponent<playerController2>();
+            collision.collider.transform.parent = null;
         }
     }
 
     IEnumerator triggerDespawn()
     {
-        yield return new WaitForSeconds(timeToDisappear);
+        yield return new WaitForSeconds(Despawn.Time);
         despawn();
     }
 
     IEnumerator triggerRespawn()
     {
-        yield return new WaitForSeconds(timeToRespawn);
+        yield return new WaitForSeconds(Respawn.Time);
         respawn();
     }
 
     private void despawn()
     {
         setExistence(false);
-        if (respawns)
+
+        if (Respawn.Enabled)
         {
             StartCoroutine(triggerRespawn());
         }
@@ -135,9 +134,9 @@ public class platformBehaviour : MonoBehaviour
 
     IEnumerator blink()
     {
-        yield return new WaitForSeconds(blinkInterval);
-        blinkActive = !blinkActive;
-        setExistence(blinkActive);
+        yield return new WaitForSeconds(Blink.Time);
+        Blink.toggle(!Blink.Active);
+        setExistence(Blink.Active);
         StartCoroutine(blink());
     }
 
@@ -152,15 +151,27 @@ public class platformBehaviour : MonoBehaviour
     IEnumerator grow()
     {
         float elapsedTime = 0;
-        float waitTime = timeToGrow;
+        float waitTime = Grow.Time;
 
-
-        //currentPosition = transform.position;
         Vector3 currentScale = transform.localScale;
+
+        
+
+        if (Grow.Axis == axis.X)
+        {
+            finalSize = new Vector3(transform.localScale.x * Grow.ScaleFactor, transform.localScale.y, transform.localScale.z);
+        }
+        if (Grow.Axis == axis.Y)
+        {
+            finalSize = new Vector3(transform.localScale.x, transform.localScale.y * Grow.ScaleFactor, transform.localScale.z);
+        }
+        if (Grow.Axis == axis.Z)
+        {
+            finalSize = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z * Grow.ScaleFactor);
+        }
 
         while (elapsedTime < waitTime)
         {
-            //transform.position = Vector3.Lerp(currentPosition, endPos, (elapsedTime / waitTime));
             transform.localScale = Vector3.Lerp(currentScale, finalSize, (elapsedTime / waitTime));
             elapsedTime += Time.deltaTime;
 

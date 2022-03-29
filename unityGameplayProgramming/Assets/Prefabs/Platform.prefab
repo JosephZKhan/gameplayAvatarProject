@@ -207,7 +207,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f33a8cdd63589448f2b72f91c73951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disappears: 0
-  timeToDisappear: 4
-  respawns: 0
-  timeToRespawn: 6
+  Despawn:
+    enabled: 1
+    time: 4
+  Respawn:
+    enabled: 1
+    time: 4
+  Blink:
+    enabled: 1
+    time: 2.5
+    active: 0
+  Grow:
+    enabled: 1
+    time: 3
+    scaleFactor: 6.5
+    axis: 2
+  Move:
+    enabled: 1
+    axis: 0
+    speed: 3.5
+  pathSpeed: 0
+  pathPoint: 0
+  end: 0
+  surface: {fileID: 7808535086834706734}
