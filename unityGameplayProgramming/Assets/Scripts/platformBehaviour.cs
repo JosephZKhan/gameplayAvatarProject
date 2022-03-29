@@ -11,12 +11,13 @@ public class platformBehaviour : MonoBehaviour
 
     public enum axis { X, Y, Z };
     public enum movement { Automatic, OnStand };
+    public enum growth { OneWay, Reverse };
 
     [Header("Designer settings")]
     [SerializeField] private Optional<float> Despawn = new Optional<float>(4.0f);
     [SerializeField] private Optional<float> Respawn = new Optional<float>(4.0f);
     [SerializeField] private OptionalBlink<float, bool> Blink = new OptionalBlink<float, bool>(2.5f, false);
-    [SerializeField] private OptionalGrow<float, float, axis> Grow = new OptionalGrow<float, float, axis>(3.0f, 6.5f, axis.Z);
+    [SerializeField] private OptionalGrow<float, float, axis, growth> Grow = new OptionalGrow<float, float, axis, growth>(1.0f, 5.0f, axis.Z, growth.OneWay);
     //[SerializeField] private OptionalMove<axis, float> Move = new OptionalMove<axis, float>(axis.X, 3.5f);
     [SerializeField] private OptionalMove<float, EndOfPathInstruction, movement> Move = new OptionalMove<float, EndOfPathInstruction, movement>(1.5f, EndOfPathInstruction.Reverse, movement.Automatic);
 
@@ -26,17 +27,36 @@ public class platformBehaviour : MonoBehaviour
     //public EndOfPathInstruction end;
 
     Vector3 finalSize;
+    Vector3 originalSize;
 
     [SerializeField] private Transform surface;
     [SerializeField] private PathCreator movePath;
 
     bool playerOnTop = false;
 
+    bool growing = false;
+
     void Awake()
     {
         coll = GetComponent<BoxCollider>();
 
         //movePath = GetComponentInChildren<PathCreator>();
+
+
+        if (Grow.Axis == axis.X)
+        {
+            finalSize = new Vector3(transform.localScale.x * Grow.ScaleFactor, transform.localScale.y, transform.localScale.z);
+        }
+        if (Grow.Axis == axis.Y)
+        {
+            finalSize = new Vector3(transform.localScale.x, transform.localScale.y * Grow.ScaleFactor, transform.localScale.z);
+        }
+        if (Grow.Axis == axis.Z)
+        {
+            finalSize = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z * Grow.ScaleFactor);
+        }
+
+        originalSize = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
     private void Start()
@@ -54,21 +74,16 @@ public class platformBehaviour : MonoBehaviour
             if (Despawn.Enabled)
             {
                 StartCoroutine(triggerDespawn());
-            }
-            if (Grow.Enabled)
-            {
-                StartCoroutine(grow());
+                playerOnTop = false;
             }
         }
+
 
         if (Move.Enabled)
         {
             if (Move.Mode == movement.Automatic)
             {
                 pathPoint += Move.Speed * Time.deltaTime;
-                //Vector3 platformPathPos = new Vector3(movePath.path.GetPointAtDistance(pathPoint, end).x, movePath.path.GetPointAtDistance(pathPoint).y, movePath.path.GetPointAtDistance(pathPoint).z);
-                /*transform.position = new Vector3(movePath.path.GetPointAtDistance(pathPoint, Move.End).x, movePath.path.GetPointAtDistance(pathPoint, Move.End).y, movePath.path.GetPointAtDistance(pathPoint, Move.End).z);
-                transform.eulerAngles = new Vector3(0, movePath.path.GetRotationAtDistance(pathPoint, Move.End).eulerAngles.y, 0);*/
             }
 
             if (Move.Mode == movement.OnStand)
@@ -76,16 +91,12 @@ public class platformBehaviour : MonoBehaviour
                 if (playerOnTop)
                 {
                     pathPoint += Move.Speed * Time.deltaTime;
-                    /*transform.position = new Vector3(movePath.path.GetPointAtDistance(pathPoint, Move.End).x, movePath.path.GetPointAtDistance(pathPoint, Move.End).y, movePath.path.GetPointAtDistance(pathPoint, Move.End).z);
-                    transform.eulerAngles = new Vector3(0, movePath.path.GetRotationAtDistance(pathPoint, Move.End).eulerAngles.y, 0);*/
                 }
                 else
                 {
                     if (pathPoint - Move.Speed * Time.deltaTime > 0)
                     {
                         pathPoint -= Move.Speed * Time.deltaTime;
-                        /*transform.position = new Vector3(movePath.path.GetPointAtDistance(pathPoint, Move.End).x, movePath.path.GetPointAtDistance(pathPoint, Move.End).y, movePath.path.GetPointAtDistance(pathPoint, Move.End).z);
-                        transform.eulerAngles = new Vector3(0, movePath.path.GetRotationAtDistance(pathPoint, Move.End).eulerAngles.y, 0);*/
                     }
                 }
             }
@@ -98,11 +109,6 @@ public class platformBehaviour : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        /*if (collision.collider.CompareTag("Player"))
-        {
-            // playerController2 t = collision.collider.GetComponent<playerController2>();
-            collision.collider.transform.parent = transform;
-        }*/
 
 
         if (collision.collider.CompareTag("Player"))
@@ -115,6 +121,11 @@ public class platformBehaviour : MonoBehaviour
                 if (Move.Enabled)
                 {
                     collision.collider.transform.parent = transform;
+                }
+
+                if (Grow.Enabled && !growing)
+                {
+                    StartCoroutine(growTo(finalSize));
                 }
             }
             else
@@ -131,6 +142,11 @@ public class platformBehaviour : MonoBehaviour
             // playerController2 t = collision.collider.GetComponent<playerController2>();
             collision.collider.transform.parent = null;
             playerOnTop = false;
+
+            if (Grow.Enabled && Grow.Mode == growth.Reverse && !growing)
+            {
+                StartCoroutine(growTo(originalSize));
+            }
         }
     }
 
@@ -177,37 +193,25 @@ public class platformBehaviour : MonoBehaviour
         surface.GetComponent<MeshCollider>().enabled = existence;
     }
 
-    IEnumerator grow()
+    IEnumerator growTo(Vector3 newSize)
     {
         float elapsedTime = 0;
         float waitTime = Grow.Time;
 
         Vector3 currentScale = transform.localScale;
 
-        
-
-        if (Grow.Axis == axis.X)
-        {
-            finalSize = new Vector3(transform.localScale.x * Grow.ScaleFactor, transform.localScale.y, transform.localScale.z);
-        }
-        if (Grow.Axis == axis.Y)
-        {
-            finalSize = new Vector3(transform.localScale.x, transform.localScale.y * Grow.ScaleFactor, transform.localScale.z);
-        }
-        if (Grow.Axis == axis.Z)
-        {
-            finalSize = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z * Grow.ScaleFactor);
-        }
+        growing = true;
 
         while (elapsedTime < waitTime)
         {
-            transform.localScale = Vector3.Lerp(currentScale, finalSize, (elapsedTime / waitTime));
+            transform.localScale = Vector3.Lerp(currentScale, newSize, (elapsedTime / waitTime));
             elapsedTime += Time.deltaTime;
 
             yield return null;
         }
 
-        transform.localScale = finalSize;
+        transform.localScale = newSize;
+        growing = false;
         yield return null;
     }
 }
