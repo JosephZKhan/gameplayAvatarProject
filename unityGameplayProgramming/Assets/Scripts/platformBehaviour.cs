@@ -10,6 +10,7 @@ public class platformBehaviour : MonoBehaviour
     Collider coll;
 
     public enum axis { X, Y, Z };
+    public enum movement { Automatic, OnStand };
 
     [Header("Designer settings")]
     [SerializeField] private Optional<float> Despawn = new Optional<float>(4.0f);
@@ -17,7 +18,7 @@ public class platformBehaviour : MonoBehaviour
     [SerializeField] private OptionalBlink<float, bool> Blink = new OptionalBlink<float, bool>(2.5f, false);
     [SerializeField] private OptionalGrow<float, float, axis> Grow = new OptionalGrow<float, float, axis>(3.0f, 6.5f, axis.Z);
     //[SerializeField] private OptionalMove<axis, float> Move = new OptionalMove<axis, float>(axis.X, 3.5f);
-    [SerializeField] private OptionalMove<float, EndOfPathInstruction> Move = new OptionalMove<float, EndOfPathInstruction>(1.5f, EndOfPathInstruction.Reverse);
+    [SerializeField] private OptionalMove<float, EndOfPathInstruction, movement> Move = new OptionalMove<float, EndOfPathInstruction, movement>(1.5f, EndOfPathInstruction.Reverse, movement.Automatic);
 
     //PathCreator movePath;
     //public float pathSpeed;
@@ -62,10 +63,36 @@ public class platformBehaviour : MonoBehaviour
 
         if (Move.Enabled)
         {
-            pathPoint += Move.Speed * Time.deltaTime;
-            //Vector3 platformPathPos = new Vector3(movePath.path.GetPointAtDistance(pathPoint, end).x, movePath.path.GetPointAtDistance(pathPoint).y, movePath.path.GetPointAtDistance(pathPoint).z);
+            if (Move.Mode == movement.Automatic)
+            {
+                pathPoint += Move.Speed * Time.deltaTime;
+                //Vector3 platformPathPos = new Vector3(movePath.path.GetPointAtDistance(pathPoint, end).x, movePath.path.GetPointAtDistance(pathPoint).y, movePath.path.GetPointAtDistance(pathPoint).z);
+                /*transform.position = new Vector3(movePath.path.GetPointAtDistance(pathPoint, Move.End).x, movePath.path.GetPointAtDistance(pathPoint, Move.End).y, movePath.path.GetPointAtDistance(pathPoint, Move.End).z);
+                transform.eulerAngles = new Vector3(0, movePath.path.GetRotationAtDistance(pathPoint, Move.End).eulerAngles.y, 0);*/
+            }
+
+            if (Move.Mode == movement.OnStand)
+            {
+                if (playerOnTop)
+                {
+                    pathPoint += Move.Speed * Time.deltaTime;
+                    /*transform.position = new Vector3(movePath.path.GetPointAtDistance(pathPoint, Move.End).x, movePath.path.GetPointAtDistance(pathPoint, Move.End).y, movePath.path.GetPointAtDistance(pathPoint, Move.End).z);
+                    transform.eulerAngles = new Vector3(0, movePath.path.GetRotationAtDistance(pathPoint, Move.End).eulerAngles.y, 0);*/
+                }
+                else
+                {
+                    if (pathPoint - Move.Speed * Time.deltaTime > 0)
+                    {
+                        pathPoint -= Move.Speed * Time.deltaTime;
+                        /*transform.position = new Vector3(movePath.path.GetPointAtDistance(pathPoint, Move.End).x, movePath.path.GetPointAtDistance(pathPoint, Move.End).y, movePath.path.GetPointAtDistance(pathPoint, Move.End).z);
+                        transform.eulerAngles = new Vector3(0, movePath.path.GetRotationAtDistance(pathPoint, Move.End).eulerAngles.y, 0);*/
+                    }
+                }
+            }
+
             transform.position = new Vector3(movePath.path.GetPointAtDistance(pathPoint, Move.End).x, movePath.path.GetPointAtDistance(pathPoint, Move.End).y, movePath.path.GetPointAtDistance(pathPoint, Move.End).z);
             transform.eulerAngles = new Vector3(0, movePath.path.GetRotationAtDistance(pathPoint, Move.End).eulerAngles.y, 0);
+
         }
     }
 
@@ -76,6 +103,7 @@ public class platformBehaviour : MonoBehaviour
             // playerController2 t = collision.collider.GetComponent<playerController2>();
             collision.collider.transform.parent = transform;
         }*/
+
 
         if (collision.collider.CompareTag("Player"))
         {
@@ -102,6 +130,7 @@ public class platformBehaviour : MonoBehaviour
         {
             // playerController2 t = collision.collider.GetComponent<playerController2>();
             collision.collider.transform.parent = null;
+            playerOnTop = false;
         }
     }
 
