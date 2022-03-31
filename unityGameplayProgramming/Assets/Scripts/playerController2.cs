@@ -117,6 +117,7 @@ public class playerController2 : MonoBehaviour
 
 
 
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -177,6 +178,7 @@ public class playerController2 : MonoBehaviour
         doubleJumpParticleRate = doubleJumpParticles.emissionRate;
         speedBoostParticleRate = speedBoostParticles.emissionRate;
         superPunchParticleRate = superPunchParticles.emissionRate;
+
     }
 
     private void OnEnable()

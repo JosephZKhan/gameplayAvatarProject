@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public struct OptionalGrow<T, S, U, M>
+public struct OptionalGrow<T, S, U, M, D>
 {
 
     [SerializeField] private bool enabled;
@@ -10,16 +10,18 @@ public struct OptionalGrow<T, S, U, M>
     [SerializeField] private S scaleFactor;
     [SerializeField] private U axis;
     [SerializeField] private M mode;
+    [SerializeField] private D delay;
 
 
 
-    public OptionalGrow(T initialTime, S initialScale, U initialAxis, M initialMode)
+    public OptionalGrow(T initialTime, S initialScale, U initialAxis, M initialMode, D initialDelay)
     {
         enabled = true;
         time = initialTime;
         scaleFactor = initialScale;
         axis = initialAxis;
         mode = initialMode;
+        delay = initialDelay;
 
         //active = startActive;
     }
@@ -29,5 +31,6 @@ public struct OptionalGrow<T, S, U, M>
     public S ScaleFactor => scaleFactor;
     public U Axis => axis;
     public M Mode => mode;
+    public D Delay => delay;
 
 }
