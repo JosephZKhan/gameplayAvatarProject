@@ -63,3 +63,6 @@ Zoom In: R2
 
 COMPONENT 5 - 2.5D Spline Gameplay
 Demo Scene: splineDemoScene
+
+COMPONENT 6 - Platform Sequence Gameplay
+Demo Scene: platformSequenceDemoScene
