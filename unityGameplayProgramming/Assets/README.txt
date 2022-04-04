@@ -66,3 +66,6 @@ Demo Scene: splineDemoScene
 
 COMPONENT 6 - Platform Sequence Gameplay
 Demo Scene: platformSequenceDemoScene
+
+COMPONENT 7 - AI Combat
+Demo Scene: enemyCombatDemoScene
