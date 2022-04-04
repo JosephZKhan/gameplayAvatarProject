@@ -115,6 +115,8 @@ public class playerController2 : MonoBehaviour
     bool canMoveForward = true;
     bool canMoveBackward = true;
 
+    int health = 3;
+
 
 
 
@@ -261,12 +263,10 @@ public class playerController2 : MonoBehaviour
                     if (move.x > 0 && Mathf.Abs(move.y) < 0.3)
                     {
                         movement = transform.right * strafeSpeed * Time.deltaTime;
-                        Debug.Log("bruh");
                     }
                     if (move.x < 0 && Mathf.Abs(move.y) < 0.3)
                     {
                         movement = -transform.right * strafeSpeed * Time.deltaTime;
-                        Debug.Log("bruh");
                     }
                 }
                 else
@@ -751,6 +751,21 @@ public class playerController2 : MonoBehaviour
     public void setCanMoveBackward(bool newBool)
     {
         canMoveBackward = newBool;
+    }
+
+    void takeDamage(int damageAmount)
+    {
+        health -= damageAmount;
+        Debug.Log(health);
+        if (health <= 0)
+        {
+            die();
+        }
+    }
+
+    void die()
+    {
+        Debug.Log("you died!");
     }
 
 }

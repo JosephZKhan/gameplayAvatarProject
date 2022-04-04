@@ -63,6 +63,7 @@ public class controlCamera : MonoBehaviour
     int splineFlipDir = 1;
 
 
+
     void Awake()
     {
         controls = new CameraControls();
