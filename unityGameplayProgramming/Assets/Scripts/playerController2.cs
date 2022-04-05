@@ -115,7 +115,7 @@ public class playerController2 : MonoBehaviour
     bool canMoveForward = true;
     bool canMoveBackward = true;
 
-    int health = 3;
+    int health = 5;
 
 
 
@@ -753,19 +753,39 @@ public class playerController2 : MonoBehaviour
         canMoveBackward = newBool;
     }
 
-    void takeDamage(int damageAmount)
+    public void takeDamage(int damageAmount, Transform hazardPos, int knockbackStrength)
     {
+        
         health -= damageAmount;
-        Debug.Log(health);
+        Debug.Log("oof! " + health);
+        
         if (health <= 0)
         {
             die();
+        }
+        else
+        {
+            Transform lookPos = hazardPos;
+            lookPos.position = new Vector3(hazardPos.position.x, transform.position.y, hazardPos.position.z);
+            transform.LookAt(lookPos);
+            rb.AddForce(-transform.forward * knockbackStrength, ForceMode.VelocityChange);
+            animator.SetBool("isHit", true);
+            freezePlayer();
         }
     }
 
     void die()
     {
         Debug.Log("you died!");
+        animator.SetBool("isDead", true);
+        freezePlayer();
+    }
+
+    public void endHit()
+    {
+        Debug.Log("end hit");
+        animator.SetBool("isHit", false);
+        unfreezePlayer();
     }
 
 }

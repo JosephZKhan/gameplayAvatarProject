@@ -19,12 +19,19 @@ public class slimeEnemyBehaviour : MonoBehaviour
 
 
     public float chaseRadius = 10.0f;
-    public float attackRadius = 4.0f;
+    public float attackRadius = 7.0f;
 
     Rigidbody rb;
 
     bool canAttack = true;
     bool damageActive = false;
+
+    [SerializeField] playerController2 playerScriptRef;
+    [SerializeField] BoxCollider playerPunch;
+
+    public int knockback = 150;
+
+    [SerializeField] GameObject prefab;
 
     private void Awake()
     {
@@ -40,14 +47,14 @@ public class slimeEnemyBehaviour : MonoBehaviour
         patrolPointMax = pointHolder.childCount;
 
         //rb = gameObject.GetComponent<Rigidbody>();
-
-
     }
     // Update is called once per frame
     void FixedUpdate()
     {
         if (currentStatus == status.Patrol)
         {
+            canAttack = true;
+            damageActive = false;
             agent.SetDestination(patrolPoints[patrolPointIdx]);
             if (transform.position.x == patrolPoints[patrolPointIdx].x && transform.position.z == patrolPoints[patrolPointIdx].z)
             {
@@ -61,15 +68,38 @@ public class slimeEnemyBehaviour : MonoBehaviour
 
         if (currentStatus == status.Chase)
         {
+            canAttack = true;
+            damageActive = false;
             if (playerRef != null)
             {
                 agent.SetDestination(playerRef.transform.position);
+                //Debug.Log(agent.remainingDistance);
+                if (agent.remainingDistance <= attackRadius)
+                {
+                    currentStatus = status.Attack;
+                }
             }
         }
 
         if (currentStatus == status.Attack)
         {
-            Debug.Log("in attack mode");
+            //Debug.Log("in attack mode");
+            agent.SetDestination(playerRef.transform.position);
+            agent.isStopped = true;
+            if (!canAttack)
+            {
+                transform.LookAt(playerRef.transform);
+            }
+            if (agent.remainingDistance >= attackRadius)
+            {
+                currentStatus = status.Chase;
+                agent.isStopped = false;
+            }
+            if (canAttack)
+            {
+                canAttack = false;
+                StartCoroutine(attack());
+            }
         }
 
        
@@ -84,6 +114,19 @@ public class slimeEnemyBehaviour : MonoBehaviour
             
             playerRef = other.gameObject;
             StartCoroutine(detectPlayer());
+        }
+
+        if (other == playerPunch)
+        {
+            playerScriptRef.triggerPunchEffect();
+            
+            /*GameObject newSlime1 = Instantiate(prefab, transform.localPosition + transform.right, Quaternion.identity) as GameObject;
+            GameObject newSlime2 = Instantiate(prefab, transform.localPosition - transform.right, Quaternion.identity) as GameObject;
+            newSlime1.transform.localPosition = transform.localScale / 2;
+            newSlime2.transform.localPosition = transform.localScale / 2;*/
+
+
+            Destroy(gameObject);
         }
     }
 
@@ -102,9 +145,10 @@ public class slimeEnemyBehaviour : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
+            //Debug.Log("touch player");
             if (damageActive)
             {
-                Debug.Log("hurt player.");
+                playerScriptRef.takeDamage(1, transform, knockback);
             }
         }
     }
@@ -115,16 +159,7 @@ public class slimeEnemyBehaviour : MonoBehaviour
 
         Vector3 targetDir = (playerRef.transform.position - transform.position);
         targetDir.Normalize();
-        if (Physics.Raycast(transform.position, targetDir, attackRadius))
-        {
-            if (currentStatus == status.Chase)
-            {
-                Debug.Log("enter attack mode!");
-                currentStatus = status.Attack;
-                yield return null;
-            }
-            
-        }
+
         if (Physics.Raycast(transform.position, targetDir, chaseRadius))
         {
             if (currentStatus == status.Patrol)
@@ -138,15 +173,41 @@ public class slimeEnemyBehaviour : MonoBehaviour
         
     }
 
-    /*IEnumerator attack()
+    IEnumerator attack()
     {
+        canAttack = false;
+        Debug.Log("Wait");
         yield return new WaitForSeconds(1.0f);
 
-        rb.AddForce(transform.forward * 5.0f);
+        Debug.Log("Launch");
+        //transform.Translate(transform.forward * Time.deltaTime * 300.0f, Space.World);
+        StartCoroutine(moveToPoint(transform.position + (transform.forward * 10.0f)));
         damageActive = true;
+        yield return new WaitForSeconds(2.0f);
 
-        yield return new WaitForSeconds(1.0f);
+        Debug.Log("Stop");
         damageActive = false;
+        canAttack = true;
 
-    }*/
+    }
+
+    IEnumerator moveToPoint(Vector3 endPos)
+    {
+        float elapsedTime = 0;
+        float waitTime = 1.0f;
+
+        Vector3 currentPosition = new Vector3();
+        currentPosition = transform.position;
+
+        while (elapsedTime < waitTime)
+        {
+            transform.position = Vector3.Lerp(currentPosition, endPos, (elapsedTime / waitTime));
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+
+        transform.position = endPos;
+        yield return null;
+    }
 }

@@ -4004,7 +4004,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4428321842127708081, guid: 8a1575d1af970b941b291df348e096d7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.76
+      value: 26.44
       objectReference: {fileID: 0}
     - target: {fileID: 4428321842127708081, guid: 8a1575d1af970b941b291df348e096d7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4054,6 +4054,10 @@ PrefabInstance:
       propertyPath: turnSmoothTime
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 4428321842127708086, guid: 8a1575d1af970b941b291df348e096d7, type: 3}
+      propertyPath: cameraScriptRef
+      value: 
+      objectReference: {fileID: 1388292637}
     - target: {fileID: 4428321842127708086, guid: 8a1575d1af970b941b291df348e096d7, type: 3}
       propertyPath: cameraTransform
       value: 
@@ -5355,10 +5359,13 @@ MonoBehaviour:
   isInverted: 0
   mainTarget: {fileID: 768180112}
   povTarget: {fileID: 949135476}
+  ringCount: {fileID: 1731672543}
   targetDistance: 5
   smoothTime: 0.06
   lockOnTargetDistance: 7
   zoomSpeed: 0.5
+  onSpline: 0
+  splinePathPoint: 0
 --- !u!1 &1390315746
 GameObject:
   m_ObjectHideFlags: 0
@@ -5646,6 +5653,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5490134515837567961, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7808535087605715845, guid: fedad9ec8017b5c42be3ce61f231a32d, type: 3}
       propertyPath: m_RootOrder
       value: 4
