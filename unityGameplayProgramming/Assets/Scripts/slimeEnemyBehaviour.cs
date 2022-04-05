@@ -26,12 +26,17 @@ public class slimeEnemyBehaviour : MonoBehaviour
     bool canAttack = true;
     bool damageActive = false;
 
-    [SerializeField] playerController2 playerScriptRef;
-    [SerializeField] BoxCollider playerPunch;
+    playerController2 playerScriptRef;
+    BoxCollider playerPunch;
 
     public int knockback = 150;
 
-    [SerializeField] GameObject prefab;
+    [SerializeField] slimeEnemyBehaviour prefab;
+    [SerializeField] GameObject ringPrefab;
+
+    public int health = 3;
+
+
 
     private void Awake()
     {
@@ -46,9 +51,9 @@ public class slimeEnemyBehaviour : MonoBehaviour
         }
         patrolPointMax = pointHolder.childCount;
 
-        //rb = gameObject.GetComponent<Rigidbody>();
+        playerScriptRef = GameObject.FindWithTag("Player").GetComponent<playerController2>();
+        playerPunch = GameObject.FindWithTag("Player").GetComponent<BoxCollider>();
     }
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (currentStatus == status.Patrol)
@@ -102,6 +107,11 @@ public class slimeEnemyBehaviour : MonoBehaviour
             }
         }
 
+        if (transform.localScale.x < 1.0f)
+        {
+            Destroy(gameObject);
+        }
+
        
 
         
@@ -119,14 +129,54 @@ public class slimeEnemyBehaviour : MonoBehaviour
         if (other == playerPunch)
         {
             playerScriptRef.triggerPunchEffect();
+            playerScriptRef.endPunch();
+            takeDamage();
             
-            /*GameObject newSlime1 = Instantiate(prefab, transform.localPosition + transform.right, Quaternion.identity) as GameObject;
-            GameObject newSlime2 = Instantiate(prefab, transform.localPosition - transform.right, Quaternion.identity) as GameObject;
-            newSlime1.transform.localPosition = transform.localScale / 2;
-            newSlime2.transform.localPosition = transform.localScale / 2;*/
 
+            /*if (playerScriptRef.hasSuperPunch)
+            {
+                health = 0;
+            }
+            else
+            {
+                health--;
+                StartCoroutine(moveToPoint(-transform.forward * 10));
+            }
+            if (health <= 0)
+            {
 
-            Destroy(gameObject);
+            }*/
+
+            /*if (!playerScriptRef.hasSuperPunch)
+            {
+                if (transform.localScale.x > 1.0f)
+                {
+                    slimeEnemyBehaviour newSlime1 = Instantiate(prefab, transform.position + (transform.right * 3), Quaternion.identity);
+                    slimeEnemyBehaviour newSlime2 = Instantiate(prefab, transform.position - (transform.right * 3), Quaternion.identity);
+                    newSlime1.transform.localScale = transform.localScale / 2;
+                    newSlime2.transform.localScale = transform.localScale / 2;
+                    newSlime1.health--;
+                    newSlime2.health--;
+                }
+            }
+            
+            else
+            {
+                GameObject ring1 = Instantiate(ringPrefab, transform.position + (transform.right * 2), Quaternion.identity) as GameObject;
+                GameObject ring2 = Instantiate(ringPrefab, transform.position - (transform.right * 2), Quaternion.identity) as GameObject;
+            }*/
+
+            
+
+            /*if (transform.localScale.x <= 0.25f)
+            {
+                GameObject newSlime1 = Instantiate(prefab, transform.position + (transform.right * 3), Quaternion.identity) as GameObject;
+                GameObject newSlime2 = Instantiate(prefab, transform.position - (transform.right * 3), Quaternion.identity) as GameObject;
+                newSlime1.transform.localScale = transform.localScale / 2;
+                newSlime2.transform.localScale = transform.localScale / 2;
+            }*/
+            
+            //Destroy(gameObject);
         }
     }
 
@@ -181,7 +231,7 @@ public class slimeEnemyBehaviour : MonoBehaviour
 
         Debug.Log("Launch");
         //transform.Translate(transform.forward * Time.deltaTime * 300.0f, Space.World);
-        StartCoroutine(moveToPoint(transform.position + (transform.forward * 10.0f)));
+        StartCoroutine(moveToPoint(transform.position + (transform.forward * 10.0f), 1.0f));
         damageActive = true;
         yield return new WaitForSeconds(2.0f);
 
@@ -191,10 +241,9 @@ public class slimeEnemyBehaviour : MonoBehaviour
 
     }
 
-    IEnumerator moveToPoint(Vector3 endPos)
+    IEnumerator moveToPoint(Vector3 endPos, float waitTime)
     {
         float elapsedTime = 0;
-        float waitTime = 1.0f;
 
         Vector3 currentPosition = new Vector3();
         currentPosition = transform.position;
@@ -210,4 +259,49 @@ public class slimeEnemyBehaviour : MonoBehaviour
         transform.position = endPos;
         yield return null;
     }
+
+    void takeDamage()
+    {
+        health--;
+        if (playerScriptRef.hasSuperPunch)
+        {
+            health = 0;
+        }
+        if (health > 0)
+        {
+            float knockback = 7.0f;
+            Vector3 movePos = new Vector3(transform.position.x + playerRef.transform.forward.x * knockback, transform.position.y, transform.position.z + playerRef.transform.forward.z * knockback);
+            
+            StartCoroutine(moveToPoint(movePos, 0.3f));
+        }
+        else
+        {
+            if (transform.localScale.x > 1.0f)
+            {
+                slimeEnemyBehaviour newSlime1 = Instantiate(prefab, transform.position + (transform.right * 3), Quaternion.identity);
+                slimeEnemyBehaviour newSlime2 = Instantiate(prefab, transform.position - (transform.right * 3), Quaternion.identity);
+                newSlime1.transform.localScale = transform.localScale / 2;
+                newSlime2.transform.localScale = transform.localScale / 2;
+                if (newSlime1.transform.localScale.x == 2)
+                {
+                    newSlime1.health = 2;
+                    newSlime2.health = 2;
+                }
+                if (newSlime1.transform.localScale.x == 1)
+                {
+                    newSlime1.health = 1;
+                    newSlime2.health = 1;
+                }    
+            }
+            else
+            {
+                GameObject ring1 = Instantiate(ringPrefab, transform.position + (transform.right * 2), Quaternion.identity) as GameObject;
+                GameObject ring2 = Instantiate(ringPrefab, transform.position - (transform.right * 2), Quaternion.identity) as GameObject;
+            }
+            Destroy(gameObject);
+        }
+    }
+
+
+
 }
