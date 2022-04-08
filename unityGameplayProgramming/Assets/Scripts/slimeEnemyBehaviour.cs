@@ -21,7 +21,6 @@ public class slimeEnemyBehaviour : MonoBehaviour
     public float chaseRadius = 10.0f;
     public float attackRadius = 7.0f;
 
-    Rigidbody rb;
 
     bool canAttack = true;
     bool damageActive = false;
@@ -29,12 +28,18 @@ public class slimeEnemyBehaviour : MonoBehaviour
     playerController2 playerScriptRef;
     BoxCollider playerPunch;
 
-    public int knockback = 150;
+    public int knockback = 50;
 
     [SerializeField] slimeEnemyBehaviour prefab;
     [SerializeField] GameObject ringPrefab;
 
     public int health = 3;
+
+    [SerializeField] Material[] materials;
+
+    public float launchSpeed = 10.0f;
+    Renderer rend;
+
 
 
 
@@ -53,11 +58,17 @@ public class slimeEnemyBehaviour : MonoBehaviour
 
         playerScriptRef = GameObject.FindWithTag("Player").GetComponent<playerController2>();
         playerPunch = GameObject.FindWithTag("Player").GetComponent<BoxCollider>();
+
+        rend = GetComponent<Renderer>();
+        rend.sharedMaterial = materials[0];
+
     }
     void FixedUpdate()
     {
         if (currentStatus == status.Patrol)
         {
+            rend.sharedMaterial = materials[0];
+
             canAttack = true;
             damageActive = false;
             agent.SetDestination(patrolPoints[patrolPointIdx]);
@@ -73,6 +84,8 @@ public class slimeEnemyBehaviour : MonoBehaviour
 
         if (currentStatus == status.Chase)
         {
+            rend.sharedMaterial = materials[1];
+
             canAttack = true;
             damageActive = false;
             if (playerRef != null)
@@ -88,8 +101,13 @@ public class slimeEnemyBehaviour : MonoBehaviour
 
         if (currentStatus == status.Attack)
         {
+            
+
             //Debug.Log("in attack mode");
-            agent.SetDestination(playerRef.transform.position);
+            if (playerRef != null)
+            {
+                agent.SetDestination(playerRef.transform.position);
+            }
             agent.isStopped = true;
             if (!canAttack)
             {
@@ -103,6 +121,8 @@ public class slimeEnemyBehaviour : MonoBehaviour
             if (canAttack)
             {
                 canAttack = false;
+                
+                StopAllCoroutines();
                 StartCoroutine(attack());
             }
         }
@@ -131,52 +151,6 @@ public class slimeEnemyBehaviour : MonoBehaviour
             playerScriptRef.triggerPunchEffect();
             playerScriptRef.endPunch();
             takeDamage();
-            
-
-            /*if (playerScriptRef.hasSuperPunch)
-            {
-                health = 0;
-            }
-            else
-            {
-                health--;
-                StartCoroutine(moveToPoint(-transform.forward * 10));
-            }
-            if (health <= 0)
-            {
-
-            }*/
-
-            /*if (!playerScriptRef.hasSuperPunch)
-            {
-                if (transform.localScale.x > 1.0f)
-                {
-                    slimeEnemyBehaviour newSlime1 = Instantiate(prefab, transform.position + (transform.right * 3), Quaternion.identity);
-                    slimeEnemyBehaviour newSlime2 = Instantiate(prefab, transform.position - (transform.right * 3), Quaternion.identity);
-                    newSlime1.transform.localScale = transform.localScale / 2;
-                    newSlime2.transform.localScale = transform.localScale / 2;
-                    newSlime1.health--;
-                    newSlime2.health--;
-                }
-            }
-            
-            else
-            {
-                GameObject ring1 = Instantiate(ringPrefab, transform.position + (transform.right * 2), Quaternion.identity) as GameObject;
-                GameObject ring2 = Instantiate(ringPrefab, transform.position - (transform.right * 2), Quaternion.identity) as GameObject;
-            }*/
-
-            
-
-            /*if (transform.localScale.x <= 0.25f)
-            {
-                GameObject newSlime1 = Instantiate(prefab, transform.position + (transform.right * 3), Quaternion.identity) as GameObject;
-                GameObject newSlime2 = Instantiate(prefab, transform.position - (transform.right * 3), Quaternion.identity) as GameObject;
-                newSlime1.transform.localScale = transform.localScale / 2;
-                newSlime2.transform.localScale = transform.localScale / 2;
-            }*/
-            
-            //Destroy(gameObject);
         }
     }
 
@@ -184,7 +158,7 @@ public class slimeEnemyBehaviour : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("player out of range.");
+            //Debug.Log("player out of range.");
             currentStatus = status.Patrol;
             playerRef = null;
             StopAllCoroutines();
@@ -214,7 +188,7 @@ public class slimeEnemyBehaviour : MonoBehaviour
         {
             if (currentStatus == status.Patrol)
             {
-                Debug.Log("player detected!");
+                //Debug.Log("player detected!");
                 currentStatus = status.Chase;
                 yield return null;
             }
@@ -226,18 +200,20 @@ public class slimeEnemyBehaviour : MonoBehaviour
     IEnumerator attack()
     {
         canAttack = false;
-        Debug.Log("Wait");
+        //Debug.Log("Wait");
         yield return new WaitForSeconds(1.0f);
+        rend.sharedMaterial = materials[2];
 
-        Debug.Log("Launch");
+        //Debug.Log("Launch");
         //transform.Translate(transform.forward * Time.deltaTime * 300.0f, Space.World);
         StartCoroutine(moveToPoint(transform.position + (transform.forward * 10.0f), 1.0f));
         damageActive = true;
         yield return new WaitForSeconds(2.0f);
 
-        Debug.Log("Stop");
+        //Debug.Log("Stop");
         damageActive = false;
         canAttack = true;
+        rend.sharedMaterial = materials[1];
 
     }
 

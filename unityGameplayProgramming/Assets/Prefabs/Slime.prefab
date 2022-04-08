@@ -141,6 +141,10 @@ MonoBehaviour:
   prefab: {fileID: 1665486238973664140}
   ringPrefab: {fileID: 5528394391968564882, guid: 5d53286de58bc7443a6843ed2595589a, type: 3}
   health: 3
+  materials:
+  - {fileID: 2100000, guid: ec7f979b582b6e84bb54e4014c67ac5c, type: 2}
+  - {fileID: 2100000, guid: da27229f7db0e9644a8430f414c39cf7, type: 2}
+  - {fileID: 2100000, guid: 58b4643874b876e4596524d3352fad2b, type: 2}
 --- !u!135 &1665486238973664130
 SphereCollider:
   m_ObjectHideFlags: 0

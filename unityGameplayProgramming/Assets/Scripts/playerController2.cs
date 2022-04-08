@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using PathCreation;
+using UnityEngine.SceneManagement;
 
 public class playerController2 : MonoBehaviour
 {
@@ -84,6 +85,7 @@ public class playerController2 : MonoBehaviour
     int ringCount = 0;
 
     [SerializeField] ringCounterUI ringUI;
+    [SerializeField] healthCounterUI healthUI;
 
     public bool hasSuperPunch;
 
@@ -116,6 +118,12 @@ public class playerController2 : MonoBehaviour
     bool canMoveBackward = true;
 
     int health = 5;
+
+    public bool hasMercyInvincibility = false;
+
+    bool isDead = false;
+
+    
 
 
 
@@ -755,37 +763,64 @@ public class playerController2 : MonoBehaviour
 
     public void takeDamage(int damageAmount, Transform hazardPos, int knockbackStrength)
     {
-        
-        health -= damageAmount;
-        Debug.Log("oof! " + health);
-        
-        if (health <= 0)
+        if (!hasMercyInvincibility)
         {
-            die();
+            health -= damageAmount;
+            healthUI.setCounter(health);
+            //Debug.Log("oof! " + health);
+        
+            if (health <= 0)
+            {
+                if (!isDead)
+                {
+                    die();
+                }
+            }
+            else
+            {
+                Transform lookPos = hazardPos;
+                lookPos.position = new Vector3(hazardPos.position.x, transform.position.y, hazardPos.position.z);
+                transform.LookAt(lookPos);
+                rb.AddForce(-transform.forward * knockbackStrength, ForceMode.VelocityChange);
+                animator.SetBool("isHit", true);
+                freezePlayer();
+
+                StartCoroutine(mercyInvincibility());
+            }
+
         }
-        else
-        {
-            Transform lookPos = hazardPos;
-            lookPos.position = new Vector3(hazardPos.position.x, transform.position.y, hazardPos.position.z);
-            transform.LookAt(lookPos);
-            rb.AddForce(-transform.forward * knockbackStrength, ForceMode.VelocityChange);
-            animator.SetBool("isHit", true);
-            freezePlayer();
-        }
+        
     }
 
     void die()
     {
-        Debug.Log("you died!");
+        isDead = true;
+        //Debug.Log("you died!");
         animator.SetBool("isDead", true);
         freezePlayer();
+        StartCoroutine(respawn());
+        
     }
 
     public void endHit()
     {
-        Debug.Log("end hit");
+        //Debug.Log("end hit");
         animator.SetBool("isHit", false);
         unfreezePlayer();
+    }
+
+    IEnumerator mercyInvincibility()
+    {
+        hasMercyInvincibility = true;
+        yield return new WaitForSeconds(3.0f);
+        hasMercyInvincibility = false;
+    }
+
+    IEnumerator respawn()
+    {
+        Debug.Log("respawning...");
+        yield return new WaitForSeconds(4.5f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 }
